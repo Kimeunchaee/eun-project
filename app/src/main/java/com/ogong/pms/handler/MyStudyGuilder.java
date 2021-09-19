@@ -7,8 +7,6 @@ import com.ogong.util.Prompt;
 
 public class MyStudyGuilder  {
 
-
-
   // 스터디 구성원 목록
   protected void listGuilder(Study myStudy) {
     System.out.println();
@@ -39,7 +37,8 @@ public class MyStudyGuilder  {
         for (Member watingMember : waitingMembers) {        
           if (watingMember.getPerNickname().equals(input)) {
             myStudy.getMembers().add(watingMember);
-            System.out.printf(" '%s님'이 구성원으로 승인되었습니다.\n", watingMember.getPerNickname());
+            System.out.printf(" '%s님'이 구성원으로 승인되었습니다.\n",
+                watingMember.getPerNickname());
             m = watingMember;
           }
         }

@@ -70,7 +70,7 @@ public class StudyDetailHandler extends AbstractStudyHandler {
         while (true) {
           int selectNo = Prompt.inputInt("선택> ");
           switch (selectNo) {
-            case 1: joinStudy(study); break;
+            case 1: joinStudy(study); return;
             case 0: return;
             default : 
               System.out.println(" >> 번호를 다시 선택해 주세요.");

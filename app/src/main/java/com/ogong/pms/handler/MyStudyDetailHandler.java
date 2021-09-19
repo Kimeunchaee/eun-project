@@ -30,7 +30,7 @@ public class MyStudyDetailHandler extends AbstractStudyHandler {
 
 
   @Override
-  public void execute(CommandRequest request) {
+  public void execute(CommandRequest request) throws Exception {
     System.out.println();
     System.out.println("▶ 내 스터디 상세");
     System.out.println();
@@ -55,6 +55,7 @@ public class MyStudyDetailHandler extends AbstractStudyHandler {
     Study myStudy = promptStudy.findByMyStudyNo(inputNo); 
 
     if (myStudy == null) {
+      System.out.println(" >> 본인의 스터디 번호를 입력하세요.");
       return;
     }
 
@@ -68,44 +69,54 @@ public class MyStudyDetailHandler extends AbstractStudyHandler {
     System.out.printf(" >> 대면 : %s\n", myStudy.getFace());
     System.out.printf(" >> 소개글 : %s\n", myStudy.getIntroduction());
 
+    request.setAttribute("inputNo", inputNo);
+
     if (AuthPerMemberLoginHandler.loginUser != null) {
-      if (myStudy.getOwner().getPerNickname().equals(
-          AuthPerMemberLoginHandler.loginUser.getPerNickname())) {
+
+      if (myStudy.getMemberNames().contains(
+          AuthPerMemberLoginHandler.loginUser.getPerNickname()) || 
+          myStudy.getOwner().getPerNickname().equals(
+              AuthPerMemberLoginHandler.loginUser.getPerNickname())) {
+
+        System.out.println();
+        while (true) {
+          System.out.println("\n----------------------");
+
+          System.out.println("1. 구성원");
+          // 대기중인 회원 거절하기
+          // 대기중인 회원 승인할때 회원 고유번호로 입력하도록
+          // 조장 : 권한 넘겨주기, 탈퇴시키기 까지
+
+          System.out.println("2. 캘린더");
+          System.out.println("3. To-do");
+          System.out.println("4. 자유게시판");
+          System.out.println("5. 화상미팅");
+          System.out.println("6. 탈퇴하기");  // 메서드
+          // 스터디 삭제는 되는데 탈퇴하기가 없음
+          // 구성원은 탈퇴만 해야함, 조장은 스터디삭제도 할수 있음
+
+          if (myStudy.getOwner().getPerNickname().equals(
+              AuthPerMemberLoginHandler.loginUser.getPerNickname())) {
+            System.out.println("7. 스터디 수정");
+            System.out.println("8. 스터디 삭제");
+          }
+
+          System.out.println("0. 뒤로 가기");
+
+          int selectNo = Prompt.inputInt("선택> "); 
+          switch (selectNo) {
+            case 1: myStudyGuilder.listGuilder(myStudy); break;
+            case 2: myStudyCalender.listCalender(myStudy); break;
+            case 3: myStudyToDo.listToDo(myStudy); break;
+            case 4: myStudyFreeBoard.listFreeBoard(commentList, myStudy); break;
+            case 5:  MyStudyCheating.cheat() ;  // 임시로 넣었음
+            case 6: /* 탈퇴 메서드 구현 예정 */; break;  
+            case 7: request.getRequestDispatcher("/myStudy/update").forward(request); return;
+            case 8: request.getRequestDispatcher("/myStudy/delete").forward(request); return;
+            default : return;
+          }
+        }
       }
-      selectUserModifyPage(myStudy);
     }
   }
-
-  private void selectUserModifyPage(Study myStudy) {
-    while (true) {
-      System.out.println("\n----------------------");
-
-      System.out.println("1. 구성원");
-      // 대기중인 회원 거절하기
-      // 대기중인 회원 승인할때 회원 고유번호로 입력하도록
-      // 조장 : 권한 넘겨주기, 탈퇴시키기 까지
-
-      System.out.println("2. 캘린더");
-      System.out.println("3. To-do");
-      System.out.println("4. 자유게시판");
-      System.out.println("5. 화상미팅");
-      System.out.println("6. 탈퇴하기");  // 메서드
-      // 스터디 삭제는 되는데 탈퇴하기가 없음
-      // 구성원은 탈퇴만 해야함, 조장은 스터디삭제도 할수 있음
-
-      System.out.println("0. 뒤로 가기");
-
-      int selectNo = Prompt.inputInt("선택> "); 
-      switch (selectNo) {
-        case 1: myStudyGuilder.listGuilder(myStudy); break;
-        case 2: myStudyCalender.listCalender(myStudy); break;
-        case 3: myStudyToDo.listToDo(myStudy); break;
-        case 4: myStudyFreeBoard.listFreeBoard(commentList, myStudy); break;
-        case 5:  MyStudyCheating.cheat() ;  // 임시로 넣었음
-        case 6: /* 탈퇴 메서드 구현 예정 */; break;     
-        default : return;
-      }
-    }
-  }
-
 }

@@ -6,13 +6,13 @@ import com.ogong.pms.domain.CafeReview;
 import com.ogong.pms.domain.CeoMember;
 import com.ogong.util.Prompt;
 
-public class CeoMyCafeListHandler extends AbstractCeoMemberHandler {
+public class CeoCafeListHandler extends AbstractCeoMemberHandler {
 
   List<Cafe> cafeList;
   List<CafeReview> reviewList;
   PromptPerMember promptPerMember;
 
-  public CeoMyCafeListHandler(List<CeoMember> ceoMemberList, List<Cafe> cafeList
+  public CeoCafeListHandler(List<CeoMember> ceoMemberList, List<Cafe> cafeList
       , List<CafeReview> reviewList, PromptPerMember promptPerMember) {
     super(ceoMemberList);
     this.cafeList = cafeList;

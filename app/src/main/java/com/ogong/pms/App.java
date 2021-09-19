@@ -74,11 +74,11 @@ import com.ogong.pms.handler.CeoAddHandler;
 import com.ogong.pms.handler.CeoCafeAddHandler;
 import com.ogong.pms.handler.CeoCafeDeleteHandler;
 import com.ogong.pms.handler.CeoCafeDetailHandler;
+import com.ogong.pms.handler.CeoCafeListHandler;
 import com.ogong.pms.handler.CeoCafeUpdateHandler;
 import com.ogong.pms.handler.CeoDeleteHandler;
 import com.ogong.pms.handler.CeoDetailHandler;
 import com.ogong.pms.handler.CeoFindIdPwHandler;
-import com.ogong.pms.handler.CeoMyCafeListHandler;
 import com.ogong.pms.handler.CeoReservationListHandler;
 import com.ogong.pms.handler.CeoUpdateHandler;
 import com.ogong.pms.handler.Command;
@@ -177,11 +177,12 @@ public class App {
     commandMap.put("/ceoMember/delete", 
         new CeoDeleteHandler(ceoMemberList, promptCeoMember, cafeList));
     commandMap.put("/ceoMember/myCafeList", 
-        new CeoMyCafeListHandler(ceoMemberList, cafeList, cafeReviewList, promptPerMember));
+        new CeoCafeListHandler(ceoMemberList, cafeList, cafeReviewList, promptPerMember));
     commandMap.put("/ceoMember/cafeAdd", new CeoCafeAddHandler(cafeList, ceoMemberList));
     commandMap.put("/ceoMember/cafeUpdate", new CeoCafeUpdateHandler(ceoMemberList));
     commandMap.put("/ceoMember/cafeDelete", new CeoCafeDeleteHandler(cafeList, promptcafe));
-    commandMap.put("/ceoMember/myCafeDetail", new CeoCafeDetailHandler(ceoMemberList, cafeList, cafeReviewList));
+    commandMap.put("/ceoMember/myCafeDetail", 
+        new CeoCafeDetailHandler(ceoMemberList, cafeList, cafeReviewList, cafeRoomList));
     commandMap.put("/ceoMember/ReservationList", 
         new CeoReservationListHandler(ceoMemberList, cafeReservationList, cafeList, cafeRoomList));
 
@@ -252,7 +253,7 @@ public class App {
         myStudyCalender, myStudyFreeBoard, commentList, myStudyGuilder, promptStudy));
 
     commandMap.put("/myStudy/delete", new MyStudyDeleteHandler(studyList, promptStudy));
-    commandMap.put("/myStudy/list", new MyStudyListHandler(studyList, commandMap));
+    commandMap.put("/myStudy/list", new MyStudyListHandler(studyList));
     commandMap.put("/myStudy/update", new MyStudyUpdateHandler(studyList, promptStudy));
 
   }
@@ -288,7 +289,7 @@ public class App {
     //    saveObjects("ceoMember.json", ceoMemberList);   // CeoAddHandler
     //    saveObjects("admin.json", adminList); // AuthAdminLoginHandler
     //    saveObjects("adminNotice.json" , adminNoticeList);  // AdminNoticeAddHandler
-    //    saveObjects("cafe.json", cafeList); // CafeAddHandler
+    //    saveObjects("cafe.json", cafeList); // CeoCafeAddHandler
     //    saveObjects("cafeReservation.json", cafeReservationList);  // CafeMyReservationListHandler
     //    saveObjects("cafeReview.json", cafeReviewList);
     //    saveObjects("cafeRoom.json", cafeRoomList); // CafeDetailHandler 테스트값 : 2021-10-10
@@ -507,8 +508,6 @@ public class App {
     MenuGroup myStudyMenu = new MenuGroup("내 스터디", PER_LOGIN);
     myStudyMenu.add(new MenuItem("목록", "/myStudy/list"));
     myStudyMenu.add(new MenuItem("상세", "/myStudy/detail"));
-    myStudyMenu.add(new MenuItem("수정", "/myStudy/update"));
-    myStudyMenu.add(new MenuItem("삭제", "/myStudy/delete"));
 
     return myStudyMenu; 
   }
