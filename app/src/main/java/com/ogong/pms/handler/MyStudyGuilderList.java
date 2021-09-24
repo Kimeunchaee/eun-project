@@ -41,7 +41,7 @@ public class MyStudyGuilderList {
     List<Member> waitingMembers = myStudy.getWatingMember();
 
     if (myStudy.getMembers().size()+1 >= myStudy.getNumberOfPeple()) {
-      System.out.println("인원수 가득찼습니다.");
+      System.out.println("인원수 가득차 승인할 수 없습니다.");
       return;
     }
 
