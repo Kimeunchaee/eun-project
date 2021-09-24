@@ -22,7 +22,8 @@ public class MyStudyGuilder {
     System.out.println("▶ 구성원");
     System.out.println();
 
-    System.out.println(" >> 스터디 구성원");
+    System.out.printf(" >> 스터디 구성원 (%s/%s명)\n" , myStudy.getMembers().size() + 1,
+        myStudy.getNumberOfPeple());
     System.out.println(" 조  장 : " + myStudy.getOwner().getPerNickname());
     System.out.println(" 구성원 : " + myStudy.getMemberNames());
 
@@ -34,7 +35,7 @@ public class MyStudyGuilder {
 
     if(AuthPerMemberLoginHandler.getLoginUser().getPerNickname().equals(
         myStudy.getOwner().getPerNickname()) && !myStudy.getWatingMemberNames().isEmpty()) {
-      System.out.println("\n ★ > 승인 대기 중인 회원이 있습니다.");
+      System.out.printf("\n ★ > 승인 대기 중인 회원이 %d명 있습니다.", myStudy.getWatingMember().size());
     } 
 
     else if(AuthPerMemberLoginHandler.getLoginUser().getPerNickname().equals(

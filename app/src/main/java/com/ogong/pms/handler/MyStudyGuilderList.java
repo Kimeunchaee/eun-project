@@ -40,25 +40,30 @@ public class MyStudyGuilderList {
 
     List<Member> waitingMembers = myStudy.getWatingMember();
 
+    if (myStudy.getMembers().size()+1 >= myStudy.getNumberOfPeple()) {
+      System.out.println("인원수 가득찼습니다.");
+      return;
+    }
+
     if (member != null && myStudy.getOwner().getPerEmail().equals(member.getPerEmail())) {
       System.out.println();
       if (!myStudy.getWatingMemberNames().equals("")) {
         String input = Prompt.inputString(" >> 대기 중인 회원 중 승인할 닉네임을 입력하세요 : ");
-        Member m = new Member();
+        Member m = null;
 
         for (Member watingMember : waitingMembers) {    
-
-          if (!watingMember.getPerNickname().equals(input)) {
-            System.out.println(" >> 닉네임을 다시 입력하세요.");
-          }
 
           if (watingMember.getPerNickname().equals(input)) {
             myStudy.getMembers().add(watingMember);
             System.out.printf(" >> '%s님'이 구성원으로 승인되었습니다.\n", watingMember.getPerNickname());
             m = watingMember;
+            break;
           }
         }
-        if (m != null) {
+        if (m == null) {
+          System.out.println(" >> 닉네임을 다시 입력하세요.");
+        }
+        else {
           myStudy.getWatingMember().remove(m);
         }
         return;

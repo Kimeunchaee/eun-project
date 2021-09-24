@@ -45,7 +45,7 @@ public class MyStudyListHandler extends AbstractStudyHandler {
     int waitCount = 0;
     System.out.println(" << 승인 대기 중>> \n"); 
     for (int i = 0; i < studyList.size(); i++) {
-      if (studyList.get(i).getWatingMemberNames().equals(member.getPerNickname())) {
+      if (studyList.get(i).getWatingMemberNames().contains(member.getPerNickname())) {
         System.out.printf(" (%s)\n [%s]\n", studyList.get(i).getStudyNo(),
             studyList.get(i).getStudyTitle());
         System.out.println();

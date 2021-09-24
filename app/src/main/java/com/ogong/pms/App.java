@@ -343,7 +343,7 @@ public class App {
   }
 
   static Menu welcome() {
-
+    System.out.println("백백백백백백백백업");
     MenuGroup welcomeMenuGroup = new MenuGroup("발표를 시작하겠습니다");
     welcomeMenuGroup.setPrevMenuTitle("시작");
     return welcomeMenuGroup;
