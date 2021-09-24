@@ -38,8 +38,8 @@ public class CeoCafeListHandler extends AbstractCeoMemberHandler {
         //          continue;
         //        }
         if (cafe.getCeoMember().getCeoNo() == ceoMember.getCeoNo()) {
-          System.out.printf("\n (%s)\n 이름 : %s\n 주소 : %s\n 예약가능인원 : %d\n"
-              , cafe.getNo(), cafe.getName(), cafe.getLocation(), cafe.getBookable());
+          System.out.printf("\n (%s)\n [%s]\n"
+              , cafe.getNo(), cafe.getName());
           if (cafe.getCafeStatus() == 0) {
             System.out.println(" * 승인 대기중인 카페입니다.");
           }

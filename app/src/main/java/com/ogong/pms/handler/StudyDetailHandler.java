@@ -57,6 +57,7 @@ public class StudyDetailHandler extends AbstractStudyHandler {
           switch (selectNo) {
             case 1: request.getRequestDispatcher("/myStudy/update").forward(request); return;
             case 2: request.getRequestDispatcher("/myStudy/delete").forward(request); return;
+            case 0: return;
             default : 
               System.out.println(" >> 번호를 다시 선택해 주세요.");
           }

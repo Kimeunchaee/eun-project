@@ -3,14 +3,17 @@ package com.ogong.pms.handler;
 import java.util.List;
 import com.ogong.pms.domain.AskBoard;
 import com.ogong.pms.domain.CeoMember;
-import com.ogong.pms.domain.Comment;
 import com.ogong.pms.domain.Member;
+import com.ogong.pms.domain.Reply;
 
 public class AskBoardMyListHandler extends AbstractAskBoardHandler {
 
+  ReplyDetailHandler replyDetailHandler;
+
   public AskBoardMyListHandler(List<AskBoard> askBoardList, List<Member> memberList,
-      List<CeoMember> ceoMemberList, List<Comment> commentList) {
-    super(askBoardList, commentList, memberList, ceoMemberList);
+      List<CeoMember> ceoMemberList, List<Reply> replyList, ReplyDetailHandler replyDetailHandler) {
+    super(askBoardList, replyList, memberList, ceoMemberList);
+    this.replyDetailHandler = replyDetailHandler;
   }
 
   // 마이페이지 - 내가 쓴 문의내역
@@ -20,19 +23,33 @@ public class AskBoardMyListHandler extends AbstractAskBoardHandler {
 
       // 개인이 쓴 문의글
       int count = 0;
-      for (AskBoard askList : askBoardList) {
+      AskBoard myAskBoard = new AskBoard();
+      for (AskBoard askBoard : askBoardList) {
         String member = AuthPerMemberLoginHandler.getLoginUser().getPerNickname();
-        if(member.equals(askList.getAskMemberWriter().getPerNickname())) {
+        if(member.equals(askBoard.getAskMemberWriter().getPerNickname())) {
           System.out.println();
           System.out.printf(" (%d)\n 제목 : %s\n 작성자 : %s\n 작성일 : %s\n 조회수 : %d\n", 
-              askList.getAskNo(), 
-              askList.getAskTitle(), 
-              askList.getAskMemberWriter().getPerNickname(),
-              askList.getAskRegisteredDate(),
-              askList.getAskVeiwCount());
+              askBoard.getAskNo(), 
+              askBoard.getAskTitle(), 
+              askBoard.getAskMemberWriter().getPerNickname(),
+              askBoard.getAskRegisteredDate(),
+              askBoard.getAskVeiwCount());
+          myAskBoard = askBoard;
           count++;
+
         } 
+
       }
+      System.out.println("---------------------");
+
+      if (myAskBoard.getReply() == null) {
+        System.out.println();
+        System.out.println(" >> 등록된 답변이 없습니다.");
+      }
+      else if (myAskBoard.getReply() != null) {
+        replyDetailHandler.detailReply(myAskBoard);  // 답변 호출
+      }
+
 
       if (count == 0) {
         System.out.println("\n >> 내가 등록한 문의글이 없습니다.");
@@ -43,18 +60,30 @@ public class AskBoardMyListHandler extends AbstractAskBoardHandler {
 
       // 기업이 쓴 문의글
       int count = 0;
-      for (AskBoard askList : askBoardList) {
+      AskBoard ceoAskBoard = new AskBoard();
+      for (AskBoard askBoard : askBoardList) {
         String ceoMember = AuthCeoMemberLoginHandler.getLoginCeoMember().getCeoBossName();
-        if(ceoMember.equals(askList.getAskCeoWriter().getCeoBossName())) {
+        if(ceoMember.equals(askBoard.getAskCeoWriter().getCeoBossName())) {
           System.out.println();
           System.out.printf(" (%d)\n 제목 : %s\n 작성자 : %s\n 작성일 : %s\n 조회수 : %d\n", 
-              askList.getAskNo(), 
-              askList.getAskTitle(), 
-              askList.getAskCeoWriter().getCeoBossName(),
-              askList.getAskRegisteredDate(),
-              askList.getAskVeiwCount());
+              askBoard.getAskNo(), 
+              askBoard.getAskTitle(), 
+              askBoard.getAskCeoWriter().getCeoBossName(),
+              askBoard.getAskRegisteredDate(),
+              askBoard.getAskVeiwCount());
+          ceoAskBoard = askBoard;
           count++;
         } 
+      }
+
+      System.out.println("---------------------");
+
+      if (ceoAskBoard.getReply() == null) {
+        System.out.println();
+        System.out.println(" >> 등록된 답변이 없습니다.");
+      }
+      else if (ceoAskBoard.getReply() != null) {
+        replyDetailHandler.detailReply(ceoAskBoard);  // 답변 호출
       }
 
       if (count == 0) {

@@ -47,6 +47,15 @@ public class CafeMyReservationDetailHandler extends AbstractCafeHandler {
       return;
     }
 
+    if (myReservation.getReservationStatus() != 0 && myReservation.getReservationStatus() != 1) {
+      System.out.println("----------------------");
+      System.out.println("0. 이전");
+      int selectNo = Prompt.inputInt("선택> ");
+      switch (selectNo) {
+        case 0: return;
+      }
+    }
+
     System.out.println("----------------------");
     System.out.println("1. 리뷰 등록");
     System.out.println("2. 예약 취소");
@@ -148,7 +157,8 @@ public class CafeMyReservationDetailHandler extends AbstractCafeHandler {
         System.out.println(" >> 예약 취소를 취소합니다.");
         return;
       }
-      reserList.remove(myReservation);
+      myReservation.setReservationStatus(2);
+      //      reserList.remove(myReservation);
       System.out.println(" >> 예약이 취소되었습니다.");
     } else if (reserDate.toLocalDate().compareTo(today.toLocalDate()) == 0) {
       System.out.println(" >> 당일 예약은 취소 불가능합니다.");
@@ -167,22 +177,29 @@ public class CafeMyReservationDetailHandler extends AbstractCafeHandler {
           cafeReser.getReservationNo() == input) {
         Cafe cafeReserCafe = cafeReser.getCafe();
         CafeRoom cafeRoom = getCafeRoom(cafeReser.getRoomNo());
+        String reviewStatusLable = getReviewStatusLabel(String.valueOf(cafeReser.getWirteReview()));
+        String reserStatusLable = getReservationStatus(cafeReser.getReservationStatus());
+
+        if (cafeReser.getReservationStatus() != 0 && cafeReser.getReservationStatus() != 1) {
+          reviewStatusLable = "작성불가";
+        }
+
         if (cafeReser.getUseMemberNumber() == 0) {
           System.out.printf(" (%d)\n 예약날짜 : %s\n 예약장소 : %s\n"
               + " 시작시간 : %s\n 이용시간 : %s시간\n 스터디룸 : %s\n"
-              + " 결제금액 : %d원\n 리뷰작성여부 : %s\n"
+              + " 결제금액 : %d원\n 리뷰작성여부 : %s\n 상태 : %s\n"
               , cafeReser.getReservationNo(), cafeReser.getReservationDate(), cafeReserCafe.getName()
               , cafeReser.getStartTime(), cafeReser.getUseTime(), cafeRoom.getRoomName()  
-              , cafeReser.getTotalPrice() ,getReviewStatusLabel(String.valueOf(cafeReser.getWirteReview())));
+              , cafeReser.getTotalPrice() , reviewStatusLable , reserStatusLable);
           System.out.println();  
           return cafeReser;
         } else {
           System.out.printf(" (%d)\n 예약날짜 : %s\n 예약장소 : %s\n"
               + " 시작시간 : %s\n 이용시간 : %s시간\n 사용인원 : %d명\n"
-              + " 결제금액 : %d원\n 리뷰작성여부 : %s\n"
+              + " 결제금액 : %d원\n 리뷰작성여부 : %s\n 상태 : %s\n"
               , cafeReser.getReservationNo(), cafeReser.getReservationDate(), cafeReserCafe.getName()
               , cafeReser.getStartTime(), cafeReser.getUseTime(), cafeReser.getUseMemberNumber()   
-              , cafeReser.getTotalPrice() ,getReviewStatusLabel(String.valueOf(cafeReser.getWirteReview())));
+              , cafeReser.getTotalPrice() , reviewStatusLable , reserStatusLable);
           System.out.println();
           return cafeReser;
         }

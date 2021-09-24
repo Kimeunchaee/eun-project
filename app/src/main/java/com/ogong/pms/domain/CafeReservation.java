@@ -16,7 +16,9 @@ public class CafeReservation {
   private boolean wirteReview; // 리뷰작성 여부
   private int roomNo; // 룸 예약시 룸 번호
   private int paymentNo; // 결제시 결제 번호
-  private int reservationStatus; // 0 : 결제대기 , 1 : 결제완료 , 2 : 예약취소 , 3 : 결제취소
+  private int reservationStatus; // 0 : 예약완료(현장결제) , 1 : 결제완료 , 
+  //                                2 : 예약취소(개인) , 3 : 결제취소(개인) ,
+  //                                4 : 예약거절(사장) , 5 : 결제거절(사장)
 
   @Override
   public String toString() {

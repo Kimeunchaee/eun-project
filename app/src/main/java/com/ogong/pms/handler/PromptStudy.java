@@ -27,17 +27,22 @@ public class PromptStudy {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    try {
-      for (int i = 0; i < studyList.size(); i++) {
-        if (studyList.get(i).getMemberNames().contains(member.getPerNickname()) ||
-            studyList.get(i).getOwner().getPerNickname().equals(member.getPerNickname())) {
-          return findByStudyNo(inputNo);
+    for (Study study : studyList) {
+      if (study.getStudyNo() == inputNo) {
+        if (study.getMemberNames().contains(member.getPerNickname()) ||
+            study.getOwner().getPerNickname().equals(member.getPerNickname())) {
+          return study;
         }
       }
-    } catch (Exception e) {
-      System.out.println(" >> 해당 번호의 스터디가 없습니다.");
     }
     return null;
   }
 
 }
+
+
+
+
+
+
+

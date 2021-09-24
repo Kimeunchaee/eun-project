@@ -3,15 +3,15 @@ package com.ogong.pms.handler;
 import java.util.List;
 import com.ogong.pms.domain.AskBoard;
 import com.ogong.pms.domain.CeoMember;
-import com.ogong.pms.domain.Comment;
 import com.ogong.pms.domain.Member;
+import com.ogong.pms.domain.Reply;
 import com.ogong.util.Prompt;
 
 public class AskBoardDeleteHandler extends AbstractAskBoardHandler {
 
   public AskBoardDeleteHandler(List<AskBoard> askBoardList, List<Member> memberList,
-      List<CeoMember> ceoMemberList, List<Comment> commentList) {
-    super(askBoardList, commentList, memberList, ceoMemberList);
+      List<CeoMember> ceoMemberList, List<Reply> replyList) {
+    super(askBoardList, replyList, memberList, ceoMemberList);
   }
 
   @Override
@@ -20,9 +20,9 @@ public class AskBoardDeleteHandler extends AbstractAskBoardHandler {
     System.out.println("▶ 문의사항 삭제");
     System.out.println();
 
-    int askNo = Prompt.inputInt(" 번호 : ");
+    int askNo = (int) request.getAttribute("askNo");
 
-    AskBoard askList = findByNo(askNo);
+    AskBoard askList = findByAskBoardNo(askNo);
 
     if (askList == null) {
       System.out.println(" >> 해당 번호의 문의글이 없습니다.");
@@ -33,7 +33,6 @@ public class AskBoardDeleteHandler extends AbstractAskBoardHandler {
 
       if (AuthPerMemberLoginHandler.getLoginUser().getPerNo() !=
           askList.getAskMemberWriter().getPerNo()) {
-        System.out.println();
         System.out.println(" >> 삭제 권한이 없습니다.");
         return;
       }
@@ -44,7 +43,6 @@ public class AskBoardDeleteHandler extends AbstractAskBoardHandler {
 
       if (AuthCeoMemberLoginHandler.getLoginCeoMember().getCeoNo() !=
           askList.getAskCeoWriter().getCeoNo()) {
-        System.out.println();
         System.out.println(" >> 삭제 권한이 없습니다.");
         return;
       }

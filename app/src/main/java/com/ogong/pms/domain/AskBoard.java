@@ -10,77 +10,63 @@ public class AskBoard {
   private CeoMember askCeoWriter = new CeoMember(); // 문의게시판 기업 작성자
   private int askVeiwCount; // 문의게시판 조회수
   private Date askRegisteredDate; // 문의게시판 등록일
-  private String answer; // 문의게시판 관리자 댓글
+  private Reply reply;   // 문의게시판 관리자 답변 게시글
 
   @Override
   public String toString() {
     return "AskBoard [askNo=" + askNo + ", askTitle=" + askTitle + ", askContent=" + askContent
         + ", askMemberWriter=" + askMemberWriter + ", askCeoWriter=" + askCeoWriter
-        + ", askVeiwCount=" + askVeiwCount + ", askRegisteredDate=" + askRegisteredDate
-        + ", answer=" + answer + "]";
+        + ", askVeiwCount=" + askVeiwCount + ", askRegisteredDate=" + askRegisteredDate + ", reply="
+        + reply + "]";
   }
 
   public int getAskNo() {
     return askNo;
   }
-
   public void setAskNo(int askNo) {
     this.askNo = askNo;
   }
-
   public String getAskTitle() {
     return askTitle;
   }
-
   public void setAskTitle(String askTitle) {
     this.askTitle = askTitle;
   }
-
   public String getAskContent() {
     return askContent;
   }
-
   public void setAskContent(String askContent) {
     this.askContent = askContent;
   }
-
   public Member getAskMemberWriter() {
     return askMemberWriter;
   }
-
   public void setAskMemberWriter(Member askMemberWriter) {
     this.askMemberWriter = askMemberWriter;
   }
-
   public CeoMember getAskCeoWriter() {
     return askCeoWriter;
   }
-
   public void setAskCeoWriter(CeoMember askCeoWriter) {
     this.askCeoWriter = askCeoWriter;
   }
-
   public int getAskVeiwCount() {
     return askVeiwCount;
   }
-
   public void setAskVeiwCount(int askVeiwCount) {
     this.askVeiwCount = askVeiwCount;
   }
-
   public Date getAskRegisteredDate() {
     return askRegisteredDate;
   }
-
   public void setAskRegisteredDate(Date askRegisteredDate) {
     this.askRegisteredDate = askRegisteredDate;
   }
-
-  public String getAnswer() {
-    return answer;
+  public Reply getReply() {
+    return reply;
+  }
+  public void setReply(Reply reply) {
+    this.reply = reply;
   }
 
-  public void setAnswer(String answer) {
-    this.answer = answer;
-  }
 }

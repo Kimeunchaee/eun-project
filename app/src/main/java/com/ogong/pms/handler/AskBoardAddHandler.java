@@ -4,8 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import com.ogong.pms.domain.AskBoard;
 import com.ogong.pms.domain.CeoMember;
-import com.ogong.pms.domain.Comment;
 import com.ogong.pms.domain.Member;
+import com.ogong.pms.domain.Reply;
 import com.ogong.util.Prompt;
 
 public class AskBoardAddHandler extends AbstractAskBoardHandler {
@@ -13,8 +13,8 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
   int askNo = 7;
 
   public AskBoardAddHandler(List<AskBoard> askBoardList, List<Member> memberList,
-      List<CeoMember> ceoMemberList, List<Comment> commentList) {
-    super(askBoardList, commentList, memberList, ceoMemberList);
+      List<CeoMember> ceoMemberList, List<Reply> replyList) {
+    super(askBoardList, replyList, memberList, ceoMemberList);
 
     //    AskBoard askList = new AskBoard();
     //    askList.setAskNo(1);
@@ -109,13 +109,16 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
 
     }
 
-    String input = Prompt.inputString(" 문의글을 등록하시겠습니까? (네 / 아니오) ");
+    String input = Prompt.inputString(" 정말 등록하시겠습니까? (네 / 아니오) ");
     if (!input.equalsIgnoreCase("네")) {
+      System.out.println();
       System.out.println(" >> 문의글 등록을 취소하였습니다.");
       return;
     }
 
     askBoardList.add(askList);
+    System.out.println();
+    System.out.println(" >> 문의글이 등록되었습니다.");
   }
 }
 

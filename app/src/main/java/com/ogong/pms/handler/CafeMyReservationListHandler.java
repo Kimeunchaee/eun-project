@@ -28,6 +28,7 @@ public class CafeMyReservationListHandler extends AbstractCafeHandler {
     //    reservation.setUseMemberNumber(1);
     //    reservation.setTotalPrice(2000);
     //    reservation.setWirteReview(false);
+    //    reservation.setReservationStatus(0);
     //    reserList.add(reservation);
     //
     //    reservation = new CafeReservation();
@@ -41,6 +42,7 @@ public class CafeMyReservationListHandler extends AbstractCafeHandler {
     //    reservation.setTotalPrice(45000);
     //    reservation.setWirteReview(false);
     //    reservation.setRoomNo(4);
+    //    reservation.setReservationStatus(0);
     //    reserList.add(reservation);
     //
     //    reservation = new CafeReservation();
@@ -54,6 +56,7 @@ public class CafeMyReservationListHandler extends AbstractCafeHandler {
     //    reservation.setTotalPrice(30000);
     //    reservation.setWirteReview(false);
     //    reservation.setRoomNo(4);
+    //    reservation.setReservationStatus(0);
     //    reserList.add(reservation);
   }
 
@@ -73,9 +76,10 @@ public class CafeMyReservationListHandler extends AbstractCafeHandler {
 
     for (CafeReservation myReservationList : reserList) {
       if (myReservationList.getMember().getPerNo() == member.getPerNo()) {
-        System.out.printf(" (%d)\n 예약날짜 : %s\n 예약장소 : %s\n 결제금액 : %d원\n"
+        System.out.printf(" (%d)\n 예약날짜 : %s\n 예약장소 : %s\n 결제금액 : %d원\n 상태 : %s\n"
             , myReservationList.getReservationNo(), myReservationList.getReservationDate(), 
-            myReservationList.getCafe().getName(), myReservationList.getTotalPrice());
+            myReservationList.getCafe().getName(), myReservationList.getTotalPrice(),
+            getReservationStatus(myReservationList.getReservationStatus()));
         System.out.println();
         reservationCount++;
       }
