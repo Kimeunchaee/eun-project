@@ -114,28 +114,8 @@ public class CafeDetailHandler extends AbstractCafeHandler {
     System.out.printf(" >> 휴무일 : %s\n", cafe.getHoliday());
     System.out.printf(" >> 예약가능 인원 : %d\n", cafe.getBookable());
     System.out.printf(" >> 시간당 금액 : %d원\n", cafe.getTimePrice());
-    System.out.println();
-    System.out.println("============= 리뷰 =============");
-    int reviewSize = 0;
-    for (CafeReview review : reviewList) {
-      if (review.getCafe().getNo() == cafe.getNo()) {
-        if (review.getReviewStatus() == 1) {
-          //System.out.printf(" \n (%s)\n", review.getReviewNo());
-          System.out.println(" | 삭제 된 리뷰입니다. |");
-          reviewSize++;
-          continue;
-        }
-        String nickname = review.getMember().getPerNickname();
-        System.out.printf(" 닉네임 : %s | 별점 : %s | 내용 : %s | 등록일 : %s\n",
-            nickname, getReviewGradeStatusLabel(review.getGrade()), review.getContent()
-            , review.getRegisteredDate());
-        reviewSize++;
-      }
-    }
-    if (reviewSize == 0) {
-      System.out.println(" >> 등록된 리뷰가 없습니다.");
-    }
-
+    getStarRatingAverage(cafe);
+    listReview(cafe);
     System.out.println();
 
     if (cafe.getCafeStatus() == 2) {
@@ -176,6 +156,49 @@ public class CafeDetailHandler extends AbstractCafeHandler {
           System.out.println(" >> 번호를 다시 선택해 주세요.");
       } 
     }       
+  }
+
+  private void getStarRatingAverage(Cafe cafe) {
+    int starRating = 0;
+    int starRatingCount = 0;
+    double starRatingAverage = 0;
+
+    for (CafeReview review : reviewList) {
+      if (review.getCafe().getNo() == cafe.getNo()) {
+        if (review.getReviewStatus() == 1) {
+          continue;
+        }
+        starRating += review.getGrade();
+        starRatingAverage =(double) starRating / ++starRatingCount;
+      }
+    }
+    System.out.printf(" >> 리뷰평점 : ★ %.1f(%d)\n" , starRatingAverage , starRatingCount);
+  }
+
+  private void listReview(Cafe cafe) {
+    int i = 1;
+    System.out.println();
+    System.out.println("============= 리뷰 =============");
+    int reviewSize = 0;
+    for (CafeReview review : reviewList) {
+      if (review.getCafe().getNo() == cafe.getNo()) {
+        if (review.getReviewStatus() == 1) {
+          //System.out.printf(" \n (%s)\n", review.getReviewNo());
+          System.out.printf(" (%d) | 삭제 된 리뷰입니다. |\n", i++);
+          reviewSize++;
+          continue;
+        }
+        String nickname = review.getMember().getPerNickname();
+        System.out.printf(" (%d) 닉네임 : %s | 별점 : %s | 내용 : %s | 등록일 : %s\n",
+            i++, nickname, getReviewGradeStatusLabel(review.getGrade()), review.getContent()
+            , review.getRegisteredDate());
+        reviewSize++;
+      }
+    }
+
+    if (reviewSize == 0) {
+      System.out.println(" >> 등록된 리뷰가 없습니다.");
+    }
   }
 
   protected void addReservation(Cafe cafe) {

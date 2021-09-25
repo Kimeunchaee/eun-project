@@ -10,14 +10,15 @@ public class AskBoard {
   private CeoMember askCeoWriter = new CeoMember(); // 문의게시판 기업 작성자
   private int askVeiwCount; // 문의게시판 조회수
   private Date askRegisteredDate; // 문의게시판 등록일
+  private int askStatus; // 문의게시판 상태
   private Reply reply;   // 문의게시판 관리자 답변 게시글
 
   @Override
   public String toString() {
     return "AskBoard [askNo=" + askNo + ", askTitle=" + askTitle + ", askContent=" + askContent
         + ", askMemberWriter=" + askMemberWriter + ", askCeoWriter=" + askCeoWriter
-        + ", askVeiwCount=" + askVeiwCount + ", askRegisteredDate=" + askRegisteredDate + ", reply="
-        + reply + "]";
+        + ", askVeiwCount=" + askVeiwCount + ", askRegisteredDate=" + askRegisteredDate
+        + ", askStatus=" + askStatus + ", reply=" + reply + "]";
   }
 
   public int getAskNo() {
@@ -61,6 +62,12 @@ public class AskBoard {
   }
   public void setAskRegisteredDate(Date askRegisteredDate) {
     this.askRegisteredDate = askRegisteredDate;
+  }
+  public int getAskStatus() {
+    return askStatus;
+  }
+  public void setAskStatus(int askStatus) {
+    this.askStatus = askStatus;
   }
   public Reply getReply() {
     return reply;

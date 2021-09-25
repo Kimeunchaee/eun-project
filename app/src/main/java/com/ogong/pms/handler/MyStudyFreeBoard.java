@@ -71,7 +71,6 @@ public class MyStudyFreeBoard {
     Member member = AuthPerMemberLoginHandler.getLoginUser();
     FreeBoard freeBoard = new FreeBoard();
 
-    freeBoard.setFreeBoardNo(freeBoardNo++);
     freeBoard.setFreeBoardTitle(Prompt.inputString(" 제목 : "));
     freeBoard.setFreeBoardContent(Prompt.inputString(" 내용 : "));
     freeBoard.setFreeBoardAtcFile(Prompt.inputString(" 첨부파일 : "));
@@ -86,6 +85,7 @@ public class MyStudyFreeBoard {
       return;
     }
 
+    freeBoard.setFreeBoardNo(freeBoardNo++);
     freeBoardList.add(freeBoard);
     study.getMyStudyFreeBoard().add(freeBoard);
 

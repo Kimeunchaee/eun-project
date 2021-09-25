@@ -16,7 +16,6 @@ public class ReplyAddHandler {
 
     Reply reply = new Reply();
 
-    reply.setReplyNo(replyNo++);
     reply.setReplyTitle(Prompt.inputString(" 제목: "));
     reply.setReplyContent(Prompt.inputString(" 내용: "));
     reply.setReplyAdminWiter(AuthAdminLoginHandler.getLoginAdmin());
@@ -28,6 +27,7 @@ public class ReplyAddHandler {
       return;
     }
 
+    reply.setReplyNo(replyNo++);
     System.out.println();
     System.out.println(" >> 등록되었습니다.");
 

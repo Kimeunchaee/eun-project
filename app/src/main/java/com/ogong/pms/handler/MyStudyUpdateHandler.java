@@ -34,20 +34,62 @@ public class MyStudyUpdateHandler extends AbstractStudyHandler {
       return;
     }
 
-    String studyTitle = Prompt.inputString(" 스터디명(" + myStudy.getStudyTitle()  + ") : ");
-    String face = Prompt.inputString(" 대면(" + myStudy.getFace() + ") : ");
-    String introduction = Prompt.inputString(" 소개글(" + myStudy.getIntroduction() + ") : ");
-
-    int nop;
+    // 스터디명
+    String studyTitle;
     while (true) {
-      nop = Prompt.inputInt(" 인원수(" + myStudy.getNumberOfPeple() + ") : ");
-      if (nop < myStudy.getNumberOfPeple()) {
-        System.out.println(" >> 현재 참여 중인 인원보다 적게 수정할 수 없습니다.");
+      studyTitle = Prompt.inputString(" 스터디명(" + myStudy.getStudyTitle()  + ") : ");
+      if (studyTitle.length() == 0) {
+        System.out.println("한 글자 이상 입력해주세요.");
         continue;
       }
       break;
     }
+    myStudy.setStudyTitle(studyTitle);
 
+    // 인원수
+    int nop = 0;
+    while (true) {
+      try {
+        nop = Prompt.inputInt(" 인원수(" + myStudy.getNumberOfPeple() + ") : ");
+        if (nop < myStudy.getNumberOfPeple()) {
+          System.out.println(" >> 현재 참여 중인 인원보다 적게 수정할 수 없습니다.");
+          continue;
+        }
+      }catch (NumberFormatException e) {
+        System.out.println("숫자만 입력하세요.");
+        continue;
+      }
+      break;
+    }
+    myStudy.setNumberOfPeple(nop);
+
+    // 대면 비대면
+    String face;
+    while (true) {
+      System.out.println();
+      face = Prompt.inputString(" 대면 , 비대면 , 대면/비대면 : ");
+      if ((face.length() == 3 && face.equals("비대면")) ||
+          (face.length() == 2 && face.equals("대면")) ||
+          (face.length() == 6 && face.equals("대면/비대면"))) {
+        break;
+      }
+      System.out.println(" >> 대면/비대면 중에 입력하세요.");
+    }
+    myStudy.setFace(face);
+
+    // 소개글
+    String introduction;
+    while (true) {
+      introduction = Prompt.inputString(" 소개글(" + myStudy.getIntroduction() + ") : ");
+      if (introduction.length() == 0) {
+        System.out.println("한 글자 이상 입력해주세요.");
+        continue;
+      }
+      break;
+    }
+    myStudy.setIntroduction(introduction);
+
+    // 확인
     System.out.println();
     String input = Prompt.inputString(" 정말 수정하시겠습니까? (네 / 아니오) ");
     if (!input.equalsIgnoreCase("네")) {
@@ -55,12 +97,6 @@ public class MyStudyUpdateHandler extends AbstractStudyHandler {
       return;
     }
 
-    myStudy.setStudyTitle(studyTitle);
-    myStudy.setFace(face);
-    myStudy.setIntroduction(introduction);
-    myStudy.setNumberOfPeple(nop);
-
     System.out.println(" >> 스터디가 수정되었습니다.");
   }
-
 }

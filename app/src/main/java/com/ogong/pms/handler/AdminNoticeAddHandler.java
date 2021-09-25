@@ -7,6 +7,7 @@ import com.ogong.util.Prompt;
 
 public class AdminNoticeAddHandler extends AbstractAdminNoticeHandler {
 
+  int adminNotiNo = 3;
 
   public AdminNoticeAddHandler(List<AdminNotice> adminNoticeList) {
     super(adminNoticeList);
@@ -38,13 +39,19 @@ public class AdminNoticeAddHandler extends AbstractAdminNoticeHandler {
 
     AdminNotice adminWriteList = new AdminNotice();
 
-    adminWriteList.setAdminNotiNo(Prompt.inputInt(" 번호 : "));
     adminWriteList.setAdminNotiTitle(Prompt.inputString(" 제목 : "));
     adminWriteList.setAdminNotiContent(Prompt.inputString(" 내용 : "));
     adminWriteList.setAdminNotiWriter(AuthAdminLoginHandler.getLoginAdmin().getMasterNickname());
     adminWriteList.setAdminNotiRegisteredDate(new Date(System.currentTimeMillis()));
 
+    System.out.println();
+    String input = Prompt.inputString(" 정말 등록하시겠습니까? (네 / 아니오) ");
+    if (!input.equals("네")) {
+      System.out.println(" >> 등록이 취소되었습니다.");
+      return;
+    }
+    adminWriteList.setAdminNotiNo(adminNotiNo++);
     adminNoticeList.add(adminWriteList);
+    System.out.println(" >> 공지글 등록이 완료되었습니다.");
   }
-
 }

@@ -23,7 +23,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskMemberWriter(memberList.get(0));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("예약 방법에 대해..");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
     //
     //    askList = new AskBoard();
@@ -33,7 +33,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskCeoWriter(ceoMemberList.get(0));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("가게 승인 요청 방법은..");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
     //
     //    askList = new AskBoard();
@@ -43,7 +43,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskMemberWriter(memberList.get(1));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("오호라! 알겠습니다!");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
     //
     //    askList = new AskBoard();
@@ -53,7 +53,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskCeoWriter(ceoMemberList.get(1));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("수정하겠습니다.");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
     //
     //    askList = new AskBoard();
@@ -63,7 +63,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskMemberWriter(memberList.get(2));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("스터디 참여 방법은..");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
     //
     //    askList = new AskBoard();
@@ -73,7 +73,7 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
     //    askList.setAskCeoWriter(ceoMemberList.get(2));
     //    askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
     //    askList.setAskVeiwCount(askList.getAskVeiwCount());
-    //    askList.setAnswer("헐! 헐! 헐!");
+    //    askList.setAskStatus(1);
     //    askBoardList.add(askList);
   }
 
@@ -85,46 +85,87 @@ public class AskBoardAddHandler extends AbstractAskBoardHandler {
 
     AskBoard askList = new AskBoard();
 
+    int statusNo = 0;
+
     if (AuthPerMemberLoginHandler.getLoginUser() != null) {
 
-      askList.setAskNo(askNo++);
       askList.setAskTitle(Prompt.inputString(" 제목 : "));
       askList.setAskContent(Prompt.inputString(" 내용 : "));
       askList.setAskMemberWriter(AuthPerMemberLoginHandler.getLoginUser());
       askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
-      // 0917 관리자 댓글 수정 필요!
-      //      askList.setAdminComment(new ArrayList<>());
 
+      while (true) {
+
+        try {
+          statusNo = Prompt.inputInt(" 1: 공개 / 2: 비공개 > ");
+          System.out.println();
+          if (statusNo >= 3) {
+            System.out.println(" >> 번호를 다시 입력하세요.\n");
+            continue;
+          }
+          else if ((statusNo > 0) && (statusNo < 3)) {
+            String input = Prompt.inputString(" 정말 등록하시겠습니까? (네 / 아니오) ");
+            if (!input.equalsIgnoreCase("네")) {
+              System.out.println(" >> 문의글 등록을 취소하였습니다.");
+              return;
+            }    
+            askList.setAskNo(askNo++);
+            break;
+          }
+        } catch (NumberFormatException e) {
+          System.out.println(" >> 번호만 입력 가능합니다.\n");
+          continue;
+        }
+        break;
+      } 
+
+      askList.setAskStatus(statusNo);
     }
 
     else if (AuthCeoMemberLoginHandler.getLoginCeoMember() != null) {
 
-      askList.setAskNo(askNo++);
       askList.setAskTitle(Prompt.inputString(" 제목 : "));
       askList.setAskContent(Prompt.inputString(" 내용 : "));
       askList.setAskCeoWriter(AuthCeoMemberLoginHandler.getLoginCeoMember());
       askList.setAskRegisteredDate(new Date(System.currentTimeMillis()));
-      // 0917 관리자 댓글 수정 필요!
-      //      askList.setAdminComment(new ArrayList<>());
 
+      while (true) {
+
+        try {
+          statusNo = Prompt.inputInt(" 1: 공개 / 2: 비공개 > ");
+          System.out.println();
+          if (statusNo >= 3) {
+            System.out.println(" >> 번호를 다시 입력하세요.\n");
+            continue;
+          }
+          else if ((statusNo > 0) && (statusNo < 3)) {
+            String input = Prompt.inputString(" 정말 등록하시겠습니까? (네 / 아니오) ");
+            if (!input.equalsIgnoreCase("네")) {
+              System.out.println(" >> 문의글 등록을 취소하였습니다.");
+              return;
+            }     
+            askList.setAskNo(askNo++);
+            break;
+          }
+        } catch (NumberFormatException e) {
+          System.out.println(" >> 번호만 입력 가능합니다.\n");
+          continue;
+        }
+        break;
+      } 
+
+      askList.setAskStatus(statusNo);
     }
 
-    String input = Prompt.inputString(" 정말 등록하시겠습니까? (네 / 아니오) ");
-    if (!input.equalsIgnoreCase("네")) {
-      System.out.println();
-      System.out.println(" >> 문의글 등록을 취소하였습니다.");
+    if (statusNo == 0) {
+      System.out.println(" >> 이전 화면으로 돌아갑니다.");
       return;
+    } 
+
+    else if ((statusNo > 0) && (statusNo < 3)) {
+      System.out.println(" >> 문의글이 등록되었습니다.");
+      askBoardList.add(askList);
     }
-
-    askBoardList.add(askList);
-    System.out.println();
-    System.out.println(" >> 문의글이 등록되었습니다.");
   }
+
 }
-
-
-
-
-
-
-

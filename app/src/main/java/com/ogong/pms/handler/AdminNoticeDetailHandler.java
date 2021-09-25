@@ -30,8 +30,7 @@ public class AdminNoticeDetailHandler extends AbstractAdminNoticeHandler {
     System.out.printf(" >> 작성자 : %s\n", adminWriteList.getAdminNotiWriter());
     System.out.printf(" >> 등록일 : %s\n", adminWriteList.getAdminNotiRegisteredDate());
 
-    if (AuthAdminLoginHandler.getLoginAdmin().getMasterNickname().equals(
-        adminWriteList.getAdminNotiWriter())) {
+    if (AuthAdminLoginHandler.getLoginAdmin() != null) {
 
       request.setAttribute("adminnotiNo", adminnotiNo);
 

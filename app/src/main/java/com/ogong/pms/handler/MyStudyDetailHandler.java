@@ -12,18 +12,20 @@ public class MyStudyDetailHandler extends AbstractStudyHandler {
   MyStudyCalender myStudyCalender;
   MyStudyFreeBoard myStudyFreeBoard;
   MyStudyGuilder myStudyGuilder;
+  MyStudyExit myStudyExit;
   List<Comment> commentList;
   PromptStudy promptStudy;
 
   public MyStudyDetailHandler(List<Study> studyList, MyStudyToDo myStudyToDo, 
       MyStudyCalender myStudyCalender, MyStudyFreeBoard myStudyFreeBoard,
-      List<Comment> commentList, MyStudyGuilder myStudyGuilder,
+      MyStudyGuilder myStudyGuilder, MyStudyExit myStudyExit, List<Comment> commentList, 
       PromptStudy promptStudy) {
     super(studyList);
     this.myStudyToDo = myStudyToDo;
     this.myStudyCalender = myStudyCalender;
     this.myStudyFreeBoard = myStudyFreeBoard;
     this.myStudyGuilder = myStudyGuilder;
+    this.myStudyExit = myStudyExit;
     this.commentList = commentList;
     this.promptStudy = promptStudy;
   }
@@ -114,7 +116,7 @@ public class MyStudyDetailHandler extends AbstractStudyHandler {
               case 3: myStudyToDo.listToDo(myStudy); break;
               case 4: myStudyFreeBoard.listFreeBoard(commentList, myStudy); break;
               case 5:  MyStudyCheating.cheat() ;  // 임시로 넣었음
-              case 6: /* 탈퇴 메서드 구현 예정 */; break;  
+              case 6: myStudyExit.exitMyStudy(myStudy); return;  
               case 7: request.getRequestDispatcher("/myStudy/update").forward(request); return;
               case 8: request.getRequestDispatcher("/myStudy/delete").forward(request); return;
               default : return;

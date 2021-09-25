@@ -83,6 +83,7 @@ import com.ogong.pms.handler.MemberUpdateHandler;
 import com.ogong.pms.handler.MyStudyCalender;
 import com.ogong.pms.handler.MyStudyDeleteHandler;
 import com.ogong.pms.handler.MyStudyDetailHandler;
+import com.ogong.pms.handler.MyStudyExit;
 import com.ogong.pms.handler.MyStudyFreeBoard;
 import com.ogong.pms.handler.MyStudyGuilder;
 import com.ogong.pms.handler.MyStudyGuilderDelete;
@@ -105,7 +106,6 @@ import com.ogong.pms.listener.AppInitListener;
 import com.ogong.pms.listener.FileListener;
 import com.ogong.util.Prompt;
 
-// 백업
 public class App {
   List<Study> studyList = new LinkedList<>();
   List<Member> memberList = new LinkedList<>();
@@ -277,10 +277,10 @@ public class App {
     MyStudyGuilderDelete myStudyGuilderDelete = new MyStudyGuilderDelete();
     MyStudyGuilderEntrust myStudyGuilderEntrust = new MyStudyGuilderEntrust();
     MyStudyGuilder myStudyGuilder = new MyStudyGuilder(myStudyGuilderList, myStudyGuilderDelete, myStudyGuilderEntrust);
-
+    MyStudyExit myStudyExit = new MyStudyExit();
     // 내 스터디 
     commandMap.put("/myStudy/detail", new MyStudyDetailHandler(studyList, myStudyToDo,
-        myStudyCalender, myStudyFreeBoard, commentList, myStudyGuilder, promptStudy));
+        myStudyCalender, myStudyFreeBoard, myStudyGuilder, myStudyExit, commentList, promptStudy));
     commandMap.put("/myStudy/delete", new MyStudyDeleteHandler(studyList, promptStudy));
     commandMap.put("/myStudy/list", new MyStudyListHandler(studyList));
     commandMap.put("/myStudy/update", new MyStudyUpdateHandler(studyList, promptStudy));
@@ -344,7 +344,6 @@ public class App {
   }
 
   static Menu welcome() {
-    System.out.println("백백백백백백백백업");
     MenuGroup welcomeMenuGroup = new MenuGroup("발표를 시작하겠습니다");
     welcomeMenuGroup.setPrevMenuTitle("시작");
     return welcomeMenuGroup;
@@ -432,8 +431,6 @@ public class App {
     adminNoticeMenu.add(new MenuItem("등록", "/adminNotice/add"));
     adminNoticeMenu.add(new MenuItem("목록", "/adminNotice/list"));
     adminNoticeMenu.add(new MenuItem("상세", "/adminNotice/detail"));
-    adminNoticeMenu.add(new MenuItem("수정", "/adminNotice/update"));
-    adminNoticeMenu.add(new MenuItem("삭제", "/adminNotice/delete"));
 
     return adminNoticeMenu;
   }

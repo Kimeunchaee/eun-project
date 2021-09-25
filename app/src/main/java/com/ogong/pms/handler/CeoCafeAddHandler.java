@@ -93,7 +93,7 @@ public class CeoCafeAddHandler extends AbstractCafeHandler {
     CeoMember ceoMember = AuthCeoMemberLoginHandler.getLoginCeoMember();
 
     Cafe cafe = new Cafe();
-    cafe.setNo(cafeNo++);
+
     cafe.setCeoMember(ceoMember);
     cafe.setName(Prompt.inputString(" 상호명 : "));
     cafe.setCafeLicenseNo(Prompt.inputString(" 사업자 등록번호 : "));
@@ -114,6 +114,7 @@ public class CeoCafeAddHandler extends AbstractCafeHandler {
       System.out.println(" >> 등록이 취소되었습니다.");
       return;
     }
+    cafe.setNo(cafeNo++);
     System.out.println(" >> 등록되었습니다.");
     cafeList.add(cafe);
   }

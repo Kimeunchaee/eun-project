@@ -76,7 +76,6 @@ public class MyStudyToDo {
 
     ToDo todo = new ToDo();
 
-    todo.setTodoNo(ToDoNo++);
     todo.setTodoContent(Prompt.inputString(" 내용: "));
     todo.setTodoRemark(Prompt.inputString(" 비고: "));
     todo.setTodoStatus(1);
@@ -89,6 +88,7 @@ public class MyStudyToDo {
       return;
     }
 
+    todo.setTodoNo(ToDoNo++);
     toDoList.add(todo);
     study.getMyStudyToDo().add(todo);
 

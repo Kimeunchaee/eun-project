@@ -26,30 +26,55 @@ public class MemberUpdateHandler extends AbstractMemberHandler {
       System.out.println(" >> 해당 회원이 없습니다.");
     }
 
-    try {
-      member = AuthPerMemberLoginHandler.getLoginUser();
+    member = AuthPerMemberLoginHandler.getLoginUser();
 
-      String perNickName = Prompt.inputString(" 닉네임(" + member.getPerNickname()  + ") : ");
-      String perPhoto = Prompt.inputString(" 사  진(" + member.getPerPhoto() + ") : ");
-      String perEmail = Prompt.inputString(" 이메일(" + member.getPerEmail() + ") : ");
-      String perPassword = Prompt.inputString(" 비밀번호(" + member.getPerPassword() + ") : ");
+    System.out.println("1. 닉네임");
+    System.out.println("2. 사진");
+    System.out.println("3. 이메일");
+    System.out.println("4. 비밀번호");
+    System.out.println();
+    int selectNo = Prompt.inputInt(" 수정하고 싶은 정보를 선택해 주세요. > ");
 
+    String perNickName = member.getPerNickname();
+    String perPhoto = member.getPerPhoto();
+    String perEmail = member.getPerEmail();
+    String perPassword = member.getPerPassword();
 
-      System.out.println();
-      String input = Prompt.inputString(" 정말 변경하시겠습니까? (네 / 아니오) ");
-      if (!input.equalsIgnoreCase("네")) {
-        System.out.println(" >> 회원 변경을 취소하였습니다.");
+    switch (selectNo) {
+      case 1: 
+        perNickName = Prompt.inputString(" 닉네임(" + member.getPerNickname()  + ") : ");
+        break;
+      case 2: 
+        perPhoto = Prompt.inputString(" 사  진(" + member.getPerPhoto() + ") : ");
+        break;
+      case 3:
+        perEmail = Prompt.inputString(" 이메일(" + member.getPerEmail() + ") : ");
+        break;
+      case 4:
+        perPassword = Prompt.inputString(" 비밀번호(" + member.getPerPassword() + ") : ");
+        break;
+      default : 
+        System.out.println(" >> 올바른 번호를 입력해 주세요.");
         return;
-      }
-      member.setPerNickname(perNickName);
-      member.setPerEmail(perEmail);
-      member.setPerPassword(perPassword);
-      member.setPerPhoto(perPhoto);
-
-      System.out.println(" >> 회원 정보를 변경하였습니다.");
-
-    } catch (NullPointerException e) {
-      System.out.println(" >> 로그인 하세요.");
     }
+
+    System.out.println();
+    String input = Prompt.inputString(" 정말 변경하시겠습니까? (네 / 아니오) ");
+    if (!input.equalsIgnoreCase("네")) {
+      System.out.println(" >> 회원 변경을 취소하였습니다.");
+      return;
+    }
+    if (selectNo == 1) {
+      member.setPerNickname(perNickName);
+    } else if (selectNo == 2) {
+      member.setPerPhoto(perPhoto);
+    } else if (selectNo == 3) {
+      member.setPerEmail(perEmail);
+    } else if (selectNo == 4) {
+      member.setPerPassword(perPassword);
+    }
+
+    System.out.println(" >> 회원 정보를 변경하였습니다.");
+
   }
 }

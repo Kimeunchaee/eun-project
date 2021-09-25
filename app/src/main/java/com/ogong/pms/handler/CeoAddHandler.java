@@ -62,8 +62,6 @@ public class CeoAddHandler extends AbstractCeoMemberHandler {
 
     CeoMember ceoMember = new CeoMember();
 
-    ceoMember.setCeoNo(ceoMemberNo++);
-
     String inputNewEmail;
     while (true) {
       inputNewEmail = Prompt.inputString(" 이메일 : ");
@@ -122,6 +120,7 @@ public class CeoAddHandler extends AbstractCeoMemberHandler {
     ceoMember.setCeoPhoto(Prompt.inputString(" 사진 : "));
     ceoMember.setCeoregisteredDate(new Date(System.currentTimeMillis()));
 
+    ceoMember.setCeoNo(ceoMemberNo++);
     ceoMemberList.add(ceoMember);
 
     System.out.println(" >> 기업회원 가입이 완료되었습니다.");

@@ -36,28 +36,48 @@ public class AskBoardDetailHandler extends AbstractAskBoardHandler {
       return;
     }
 
-    System.out.println();
-    System.out.printf(" [%s]\n", askBoard.getAskTitle());
-    System.out.printf(" >> 내용 : %s\n", askBoard.getAskContent());
-
-    String writer = "";
-    if (askBoard.getAskMemberWriter().getPerNickname() != null) {
-      writer = askBoard.getAskMemberWriter().getPerNickname();
-    } else if (askBoard.getAskCeoWriter().getCeoBossName() != null) {
-      writer = askBoard.getAskCeoWriter().getCeoBossName();
+    if (askBoard.getAskStatus() == 1) {
+      detailList(askBoard);
     }
-    System.out.printf(" >> 작성자 : %s\n", writer);
-    System.out.printf(" >> 작성일 : %s\n", askBoard.getAskRegisteredDate());
-    askBoard.setAskVeiwCount(askBoard.getAskVeiwCount() + 1);
-    System.out.printf(" >> 조회수 : %d\n", askBoard.getAskVeiwCount());
-    System.out.println("---------------------");
 
-    if (askBoard.getReply() == null) {
-      System.out.println();
-      System.out.println(" >> 등록된 답변이 없습니다.");
-    }
-    else if (askBoard.getReply() != null) {
-      replyDetailHandler.detailReply(askBoard);  // 답변 호출
+    else if (askBoard.getAskStatus() == 2) {
+
+      if (AuthPerMemberLoginHandler.getLoginUser() != null) {
+
+        if (AuthPerMemberLoginHandler.getLoginUser().getPerNo() !=
+            askBoard.getAskMemberWriter().getPerNo()) {
+          System.out.println(" >> 열람 권한이 없습니다.");
+          return;
+        }
+
+        System.out.println();
+        String secretPassword = Prompt.inputString(" 비밀번호 : ");
+
+        if (!AuthPerMemberLoginHandler.loginUser.getPerPassword().equals(secretPassword)) {
+          System.out.println();
+          System.out.println(" >> 비밀번호를 다시 입력하세요.");
+          return;
+        } 
+      }
+
+      if (AuthCeoMemberLoginHandler.getLoginCeoMember() != null) {
+
+        if (AuthCeoMemberLoginHandler.getLoginCeoMember().getCeoNo() !=
+            askBoard.getAskCeoWriter().getCeoNo()) {
+          System.out.println(" >> 열람 권한이 없습니다.");
+          return;
+        }
+
+        System.out.println();
+        String secretPassword = Prompt.inputString(" 비밀번호 : ");
+
+        if (!AuthCeoMemberLoginHandler.loginCeoMember.getCeoPassword().equals(secretPassword)) {
+          System.out.println();
+          System.out.println(" >> 비밀번호를 다시 입력하세요.");
+          return;
+        }
+      }
+      detailList(askBoard);
     }
 
     request.setAttribute("askNo", askNo);
@@ -93,33 +113,38 @@ public class AskBoardDetailHandler extends AbstractAskBoardHandler {
       }
     }
   }
+
+
+  private void reply(AskBoard askBoard) {
+
+    if (askBoard.getReply() == null) {
+      System.out.println();
+      System.out.println(" >> 등록된 답변이 없습니다.");
+    }
+    else if (askBoard.getReply() != null) {
+      replyDetailHandler.detailReply(askBoard);  // 답변 호출
+    }
+    return;
+  }
+
+  private void detailList(AskBoard askBoard) {
+
+    System.out.println();
+    System.out.printf(" (%d)\n", askBoard.getAskNo());
+    System.out.printf(" [%s]\n", askBoard.getAskTitle());
+    System.out.printf(" >> 내용 : %s\n", askBoard.getAskContent());
+
+    String writer = "";
+    if (askBoard.getAskMemberWriter().getPerNickname() != null) {
+      writer = askBoard.getAskMemberWriter().getPerNickname();
+    } else if (askBoard.getAskCeoWriter().getCeoBossName() != null) {
+      writer = askBoard.getAskCeoWriter().getCeoBossName();
+    }
+    System.out.printf(" >> 작성자 : %s\n", writer);
+    System.out.printf(" >> 작성일 : %s\n", askBoard.getAskRegisteredDate());
+    askBoard.setAskVeiwCount(askBoard.getAskVeiwCount() + 1);
+    System.out.printf(" >> 조회수 : %d\n", askBoard.getAskVeiwCount());
+    System.out.println("---------------------");
+    reply(askBoard);
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    if (askBoard.getReply() == null) {
-//      System.out.println();
-//      System.out.println(" >> 등록된 답변이 없습니다.");
-//      System.out.println("\n---------------------");
-//      
-//    }
-//
-//
-//
-//    
-
-
