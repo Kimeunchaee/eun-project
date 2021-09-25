@@ -105,6 +105,7 @@ import com.ogong.pms.listener.AppInitListener;
 import com.ogong.pms.listener.FileListener;
 import com.ogong.util.Prompt;
 
+// 백업
 public class App {
   List<Study> studyList = new LinkedList<>();
   List<Member> memberList = new LinkedList<>();
