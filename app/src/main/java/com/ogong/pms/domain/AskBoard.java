@@ -6,8 +6,9 @@ public class AskBoard {
   private int askNo; // 문의게시판 번호
   private String askTitle; // 문의게시판 제목
   private String askContent; // 문의게시판 내용
-  private Member askMemberWriter = new Member(); // 문의게시판 개인 작성자
+  private Member askMemberWriter = new Member();    // 문의게시판 개인 작성자
   private CeoMember askCeoWriter = new CeoMember(); // 문의게시판 기업 작성자
+  private String askNonMemberWriter;                // 문의게시판 비회원 작성자
   private int askVeiwCount; // 문의게시판 조회수
   private Date askRegisteredDate; // 문의게시판 등록일
   private int askStatus; // 문의게시판 상태
@@ -17,8 +18,17 @@ public class AskBoard {
   public String toString() {
     return "AskBoard [askNo=" + askNo + ", askTitle=" + askTitle + ", askContent=" + askContent
         + ", askMemberWriter=" + askMemberWriter + ", askCeoWriter=" + askCeoWriter
-        + ", askVeiwCount=" + askVeiwCount + ", askRegisteredDate=" + askRegisteredDate
-        + ", askStatus=" + askStatus + ", reply=" + reply + "]";
+        + ", askNonMemberWriter=" + askNonMemberWriter + ", askVeiwCount=" + askVeiwCount
+        + ", askRegisteredDate=" + askRegisteredDate + ", askStatus=" + askStatus + ", reply="
+        + reply + "]";
+  }
+
+  public String getAskNonMemberWriter() {
+    return askNonMemberWriter;
+  }
+
+  public void setAskNonMemberWriter(String askNonMemberWriter) {
+    this.askNonMemberWriter = askNonMemberWriter;
   }
 
   public int getAskNo() {

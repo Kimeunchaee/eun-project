@@ -26,7 +26,7 @@ public class MemberDeleteHandler extends AbstractMemberHandler {
     System.out.println("▶ 회원 탈퇴");
     System.out.println();
 
-    if ( AuthPerMemberLoginHandler.getLoginUser() == null) {
+    if (AuthPerMemberLoginHandler.getLoginUser() == null) {
       System.out.println(" >> 로그인 하세요.");
       return;
     }
@@ -57,15 +57,35 @@ public class MemberDeleteHandler extends AbstractMemberHandler {
       return;
     }
 
-    for (int i = studyList.size() - 1; i >= 0; i--) {
-      if (studyList.get(i).getOwner().getPerNo() == member.getPerNo()) {
-        studyList.remove(studyList.get(i));
+    // 내가 조장인 스터디 자동으로 삭제
+    //    for (int i = studyList.size() - 1; i >= 0; i--) {
+    //      if (studyList.get(i).getOwner().getPerNo() == member.getPerNo()) {
+    //        studyList.remove(studyList.get(i));
+    //      }
+    //    }
+
+    // 멤버 객체 삭제
+    //memberList.remove(member);
+
+
+    // 멤버 변경 (스스로 탈퇴)
+    member.setPerNickname("탈퇴한 회원/" + member.getPerNickname());
+    member.setPerEmail("deleted Email");
+    member.setPerPassword("deleted PW");
+    member.setPerPhoto("deleted Photo");
+    member.setPerStatus(Member.OUT);
+
+    // 스터디 변경
+    for (Study myStudy : studyList) {
+      if (myStudy.getOwner().getPerNo() == member.getPerNo()) {
+        myStudy.setStudyTitle("탈퇴한 회원의 스터디입니다.");
+        myStudy.setOwner(member);
       }
     }
 
-    memberList.remove(member);
     AuthPerMemberLoginHandler.loginUser = null;
     AuthPerMemberLoginHandler.accessLevel = Menu.LOGOUT;
+
     System.out.println();
     System.out.println(" >> 회원 탈퇴를 완료하였습니다.");
     return;

@@ -144,7 +144,6 @@ public class AskBoardDetailHandler extends AbstractAskBoardHandler {
     System.out.printf(" >> 작성일 : %s\n", askBoard.getAskRegisteredDate());
     askBoard.setAskVeiwCount(askBoard.getAskVeiwCount() + 1);
     System.out.printf(" >> 조회수 : %d\n", askBoard.getAskVeiwCount());
-    System.out.println("---------------------");
     reply(askBoard);
   }
 }

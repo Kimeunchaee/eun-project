@@ -36,17 +36,30 @@ public class AdminMemberDeleteHandler extends AbstractMemberHandler {
         return;
       }
 
-      for (int i = studyList.size() - 1; i >= 0; i--) { 
-        if (studyList.get(i).getOwner().getPerNo() == member.getPerNo()) {
-          studyList.remove(studyList.get(i));
+      //      for (int i = studyList.size() - 1; i >= 0; i--) { 
+      //        if (studyList.get(i).getOwner().getPerNo() == member.getPerNo()) {
+      //          studyList.remove(studyList.get(i));
+      //        }
+      //      }
+      //
+      //      memberList.remove(member);
+
+      // 관리자가 탈퇴시킴
+      member.setPerNickname("탈퇴된 회원/" + member.getPerNickname());
+      member.setPerEmail("unable Email");
+      member.setPerPassword("unable PW");
+      member.setPerPhoto("unable Photo");
+      member.setPerStatus(Member.OUT);
+
+      for (Study myStudy : studyList) {
+        if (myStudy.getOwner().getPerNo() == member.getPerNo()) {
+          myStudy.setOwner(member);
+          myStudy.setStudyTitle("탈퇴한 회원의 스터디입니다.");
         }
       }
-
-      memberList.remove(member);
 
       System.out.println(" >> 회원이 삭제되었습니다.");
       return;
     }
   }
-
 }

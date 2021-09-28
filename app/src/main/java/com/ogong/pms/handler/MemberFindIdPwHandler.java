@@ -2,13 +2,16 @@ package com.ogong.pms.handler;
 
 import com.ogong.pms.domain.Member;
 import com.ogong.util.Prompt;
+import com.ogong.util.RandomPw;
 
 public class MemberFindIdPwHandler implements Command {
 
   PromptPerMember promptPerMember;
+  RandomPw randomPw;
 
-  public MemberFindIdPwHandler(PromptPerMember promptPerMember) {
+  public MemberFindIdPwHandler(PromptPerMember promptPerMember, RandomPw randomPw) {
     this.promptPerMember = promptPerMember;
+    this.randomPw = randomPw;
   }
 
   @Override
@@ -50,28 +53,6 @@ public class MemberFindIdPwHandler implements Command {
     wantByPerPw();
   }
 
-  // 임시 비밀번호 발급 기존 메서드
-  //  public void wantByPerPw() {
-  //    System.out.println();
-  //    System.out.println("▶ 임시 비밀번호 발급");
-  //    while (true) {
-  //      System.out.println();
-  //      String inputEmail =  Prompt.inputString(" 이메일 : ");
-  //      Member member = promptPerMember.findByMemberEmail(inputEmail);
-  //      if (member == null) {
-  //        System.out.println(" >> 해당 이메일이 존재하지 않습니다.");
-  //        continue;
-  //      } else {
-  //        System.out.printf(" '%s님'의 임시 비밀번호 : ", member.getPerNickname());
-  //        System.out.println(member.getPerPassword().hashCode());
-  //        System.out.println();
-  //        System.out.println(" >> 로그인 후 비밀번호를 변경해 주세요.");
-  //        String hashPW = String.valueOf(member.getPerPassword().hashCode());
-  //        member.setPerPassword(hashPW);
-  //      }
-  //      break;
-  //    }
-  //  }
   public void wantByPerPw() {
     System.out.println();
     System.out.println("▶ 임시 비밀번호 발급");
@@ -86,10 +67,10 @@ public class MemberFindIdPwHandler implements Command {
         System.out.println(" >> 해당 이메일이 존재하지 않습니다.");
         continue;
       } else {
-        String hashPW = String.valueOf(member.getPerPassword().hashCode());
-        member.setPerPassword(hashPW);
+        String pw = randomPw.randomPw();
+        member.setPerPassword(pw);
         System.out.println(" >> 처리중입니다. 잠시만 기다려 주세요.");
-        sendMail.sendMail(inputEmail, hashPW);
+        sendMail.sendMail(inputEmail, pw);
         System.out.println();
         System.out.printf(" '%s님'의 임시 비밀번호가 메일로 전송되었습니다.\n", member.getPerNickname());
         System.out.println(" >> 로그인 후 비밀번호를 변경해 주세요.");

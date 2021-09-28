@@ -50,4 +50,15 @@ public class PromptPerMember {
     }
     return null;
   }
+
+  //차단된 회원 중 이메일을 통해 멤버를 찾아서 리턴한다.
+  public Member findByBlockMemberEmail(String inputEmail) {
+    for (Member member : memberList) {
+      if ((member.getPerStatus() == Member.BLOCK) && member.getPerEmail().equals(inputEmail)) {
+        return member;
+      }
+    }
+    return null;
+  }
+
 }

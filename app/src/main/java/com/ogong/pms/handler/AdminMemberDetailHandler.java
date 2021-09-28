@@ -34,19 +34,23 @@ public class AdminMemberDetailHandler extends AbstractMemberHandler {
 
     request.setAttribute("inputMemberNo", inputMemberNo);
 
-    System.out.println();
-    System.out.println("1. 수정");
-    System.out.println("2. 탈퇴");
-    System.out.println("0. 이전");
+    if (member.getPerStatus() != Member.OUT) {
+      System.out.println();
+      System.out.println("1. 수정");
+      System.out.println("2. 차단");
+      System.out.println("3. 탈퇴");
+      System.out.println("0. 이전");
 
-    while (true) {
-      int selcetNo = Prompt.inputInt("선택> ");
-      switch (selcetNo) {
-        case 1: request.getRequestDispatcher("/adminMember/update").forward(request); return;
-        case 2: request.getRequestDispatcher("/adminMember/delete").forward(request); return;
-        case 0: return;
-        default :
-          System.out.println(" >> 번호를 다시 선택해 주세요.");
+      while (true) {
+        int selcetNo = Prompt.inputInt("선택> ");
+        switch (selcetNo) {
+          case 1: request.getRequestDispatcher("/adminMember/update").forward(request); return;
+          case 2: request.getRequestDispatcher("/adminMember/block").forward(request); return;
+          case 3: request.getRequestDispatcher("/adminMember/delete").forward(request); return;
+          case 0: return;
+          default :
+            System.out.println(" >> 번호를 다시 선택해 주세요.");
+        }
       }
     }
   }

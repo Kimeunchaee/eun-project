@@ -6,7 +6,7 @@ public class ReplyDetailHandler {
 
   public void detailReply(AskBoard askBoard) {
     System.out.println();
-    System.out.println(" ▶ 답변 ");
+    System.out.println(" ▼ 답변 ▼ ");
     System.out.println();
 
     System.out.printf(" (%d)\n", askBoard.getReply().getReplyNo());

@@ -121,6 +121,12 @@ public class StudyAddHandler extends AbstractStudyHandler {
         System.out.println();
         continue;
       }
+
+      if (studyTitle.contains("탈퇴")) {
+        System.out.println(" >> 등록할 수 없는 문자가 포함되어 있습니다.");
+        continue;
+      }
+
       break;
     }
     study.setStudyTitle(studyTitle);
@@ -136,9 +142,9 @@ public class StudyAddHandler extends AbstractStudyHandler {
     System.out.println(" 6. 기타");
     System.out.println();
 
-    while (true) {
+    MAINLOOP : while (true) {
       try {
-        int subjectNo =Prompt.inputInt(" 분야 : ");
+        int subjectNo =Prompt.inputInt(" 분야 선택(1~6) : ");
         switch (subjectNo) {
           case 1 : study.setSubject("어학"); break;
           case 2 : study.setSubject("자격증"); break;
@@ -150,20 +156,20 @@ public class StudyAddHandler extends AbstractStudyHandler {
         }
 
         if (subjectNo == 6) {
-          while (true) {
+          LOOP : while (true) {
             System.out.println();
             String input = Prompt.inputString(" 기타 분야 입력 : ");
 
             if (input.equals("어학") || input.equals("자격증") || input.equals("취업") ||
                 input.equalsIgnoreCase("IT") || input.equals("예체능")) {
-              System.out.println(" >> 이미 등록된 카테고리입니다.");
-              continue;
+              System.out.println(" >> 이미 등록된 카테고리입니다.\n");
+              continue MAINLOOP;
             } else {
               System.out.println();
               String s = Prompt.inputString(" 해당 분야로 입력하시겠습니까? (네 / 아니오) ");
               if (!s.equals("네")) {
                 System.out.println(" >> 다시 입력해주세요.");
-                continue;
+                continue LOOP;
               }
               System.out.printf(" >> 분야가 '기타(%s)'로 등록되었습니다.\n", input);
               study.setSubject(input);

@@ -22,18 +22,15 @@ public class AdminMemberListHandler extends AbstractMemberHandler {
     System.out.println();
 
     for (Member member : memberList) {
-      System.out.printf(" (%d)\n 닉네임 : %s\n 이메일 : %s\n 가입일 : %s\n",
-          member.getPerNo(),
-          member.getPerNickname(), 
-          member.getPerEmail(),
-          member.getPerRegisteredDate());
-      System.out.println();
+
+      System.out.printf(" (%d)\n 닉네임 : %s\n",  member.getPerNo(), member.getPerNickname());
+
+      if (!(member.getPerNickname().contains("탈퇴") || member.getPerNickname().contains("차단"))) {
+        System.out.printf(" 이메일 : %s\n 가입일 : %s\n",
+            member.getPerEmail(),
+            member.getPerRegisteredDate());
+        System.out.println();
+      }
     }
   }
 }
-
-
-
-
-
-

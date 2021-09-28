@@ -12,6 +12,9 @@ public class MemberAddHandler extends AbstractMemberHandler {
   public MemberAddHandler(List<Member> memberList) {
     super(memberList);
 
+
+    // 나중에 테스트값 다룰때 setPerStatus 추가해야함
+
     //    Member testMember = new Member();
     //    testMember.setPerNo(1);
     //    testMember.setPerNickname("초보초보쌩초보");
@@ -126,6 +129,7 @@ public class MemberAddHandler extends AbstractMemberHandler {
 
     member.setPerRegisteredDate(new Date(System.currentTimeMillis()));
     member.setPerNo(perNo++);
+    member.setPerStatus(Member.GENERAL);
     memberList.add(member);
     System.out.println(" >> 회원가입이 완료되었습니다.");
   }

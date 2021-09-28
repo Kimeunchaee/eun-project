@@ -33,6 +33,7 @@ import com.ogong.pms.handler.AdminCeoMemberDetailHandler;
 import com.ogong.pms.handler.AdminCeoMemberListHandler;
 import com.ogong.pms.handler.AdminCeoMemberUpdateHandler;
 import com.ogong.pms.handler.AdminDetailHandler;
+import com.ogong.pms.handler.AdminMemberBlockHandler;
 import com.ogong.pms.handler.AdminMemberDeleteHandler;
 import com.ogong.pms.handler.AdminMemberDetailHandler;
 import com.ogong.pms.handler.AdminMemberListHandler;
@@ -105,6 +106,7 @@ import com.ogong.pms.handler.StudySearchHandler;
 import com.ogong.pms.listener.AppInitListener;
 import com.ogong.pms.listener.FileListener;
 import com.ogong.util.Prompt;
+import com.ogong.util.RandomPw;
 
 public class App {
   List<Study> studyList = new LinkedList<>();
@@ -206,6 +208,7 @@ public class App {
     commandMap.put("/adminMember/detail", new AdminMemberDetailHandler(memberList, promptPerMember));
     commandMap.put("/adminMember/update", new AdminMemberUpdateHandler(memberList, promptPerMember));
     commandMap.put("/adminMember/delete", new AdminMemberDeleteHandler(memberList, promptPerMember, studyList));
+    commandMap.put("/adminMember/block", new AdminMemberBlockHandler(memberList, promptPerMember, studyList));
     commandMap.put("/adminMember/list", new AdminMemberListHandler(memberList, commandMap));
 
     commandMap.put("/adminCeoMember/detail", new AdminCeoMemberDetailHandler(ceoMemberList, promptCeoMember));
@@ -217,8 +220,9 @@ public class App {
     ReplyAddHandler replyAddHandler = new ReplyAddHandler();
     ReplyDetailHandler replyDetailHandler = new ReplyDetailHandler();
     List<Reply> replyList = new ArrayList<>();
+    RandomPw randomPw = new RandomPw();
     commandMap.put("/askBoard/add",  
-        new AskBoardAddHandler(askBoardList, memberList, ceoMemberList, replyList));
+        new AskBoardAddHandler(askBoardList, memberList, ceoMemberList, replyList, randomPw, promptPerMember, studyList));
     commandMap.put("/askBoard/list", 
         new AskBoardListHandler(askBoardList, memberList, ceoMemberList, replyList));
     commandMap.put("/askBoard/detail", 
@@ -255,8 +259,8 @@ public class App {
     commandMap.put("/admin/login", new AuthAdminLoginHandler(adminList));
     commandMap.put("/admin/logout", new AuthAdminLogoutHandler());
 
-    commandMap.put("/member/login", new AuthPerMemberLoginHandler(promptPerMember, memberList));
-    commandMap.put("/member/findIdPw", new MemberFindIdPwHandler(promptPerMember));
+    commandMap.put("/member/findIdPw", new MemberFindIdPwHandler(promptPerMember, randomPw));
+    commandMap.put("/member/login", new AuthPerMemberLoginHandler(promptPerMember, memberList, studyList));
     commandMap.put("/member/logout", new AuthPerMemberLogoutHandler());
 
     commandMap.put("/admin/detail", new AdminDetailHandler(adminList));
@@ -344,6 +348,7 @@ public class App {
   }
 
   static Menu welcome() {
+    System.out.println("은채의 백업파일~~~~~~~~~~~~~~~~");
     MenuGroup welcomeMenuGroup = new MenuGroup("발표를 시작하겠습니다");
     welcomeMenuGroup.setPrevMenuTitle("시작");
     return welcomeMenuGroup;
@@ -537,7 +542,7 @@ public class App {
   private Menu createMemberAskBoardMenu() {
     MenuGroup askBoardMenu = new MenuGroup("문의사항");
 
-    askBoardMenu.add(new MenuItem("등록", PER_LOGIN, "/askBoard/add"));
+    askBoardMenu.add(new MenuItem("등록", "/askBoard/add"));
     askBoardMenu.add(new MenuItem("목록", "/askBoard/list"));
     askBoardMenu.add(new MenuItem("상세", "/askBoard/detail"));
 

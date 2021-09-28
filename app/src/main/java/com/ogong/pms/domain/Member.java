@@ -4,18 +4,23 @@ import java.sql.Date;
 
 public class Member {
 
+  public static final int GENERAL = 0;   // 일반
+  public static final int OUT = 1;       // 탈퇴
+  public static final int BLOCK = 2;     // 차단
+
   private int perNo;
   private String perNickname;
   private String perEmail;
   private String perPassword;
   private String perPhoto;
   private Date perRegisteredDate;
+  private int perStatus;        // 회원 상태 (0 : 일반 / 1 : 탈퇴 / 2 : 차단)
 
   @Override
   public String toString() {
     return "Member [perNo=" + perNo + ", perNickname=" + perNickname + ", perEmail=" + perEmail
         + ", perPassword=" + perPassword + ", perPhoto=" + perPhoto + ", perRegisteredDate="
-        + perRegisteredDate + "]";
+        + perRegisteredDate + ", perStatus=" + perStatus + "]";
   }
 
   public int getPerNo() {
@@ -66,4 +71,11 @@ public class Member {
     this.perRegisteredDate = perRegisteredDate;
   }
 
+  public int getPerStatus() {
+    return perStatus;
+  }
+
+  public void setPerStatus(int perStatus) {
+    this.perStatus = perStatus;
+  }
 }

@@ -7,6 +7,9 @@ public class Study {
 
   private int studyNo;              // 스터디 번호
   private String studyTitle;        // 스터디명
+
+  private String tempStudyTitle;     // 회원 차단 후 임시로 스터디명 저장해 놓는 곳
+
   private Member owner;             // 작성자(조장)
   private String subject;           // 분야
   private String area;              // 지역
@@ -22,16 +25,24 @@ public class Study {
   private List<ToDo> myStudyToDo; // 내 스터디 투두리스트
 
 
-
-
   @Override
   public String toString() {
-    return "Study [studyNo=" + studyNo + ", studyTitle=" + studyTitle + ", owner=" + owner
-        + ", subject=" + subject + ", area=" + area + ", numberOfPeple=" + numberOfPeple + ", face="
-        + face + ", introduction=" + introduction + ", registeredDate=" + registeredDate
-        + ", members=" + members + ", watingMember=" + watingMember + ", myStudyCalender="
-        + myStudyCalender + ", myStudyFreeBoard=" + myStudyFreeBoard + ", myStudyToDo="
-        + myStudyToDo + "]";
+    return "Study [studyNo=" + studyNo + ", studyTitle=" + studyTitle + ", tempStudyTitle="
+        + tempStudyTitle + ", owner=" + owner + ", subject=" + subject + ", area=" + area
+        + ", numberOfPeple=" + numberOfPeple + ", face=" + face + ", introduction=" + introduction
+        + ", registeredDate=" + registeredDate + ", members=" + members + ", watingMember="
+        + watingMember + ", myStudyCalender=" + myStudyCalender + ", myStudyFreeBoard="
+        + myStudyFreeBoard + ", myStudyToDo=" + myStudyToDo + "]";
+  }
+
+
+  public String getTempStudyTitle() {
+    return tempStudyTitle;
+  }
+
+
+  public void setTempStudyTitle(String tempStudyTitle) {
+    this.tempStudyTitle = tempStudyTitle;
   }
 
 
