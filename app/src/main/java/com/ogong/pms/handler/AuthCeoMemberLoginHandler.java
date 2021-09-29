@@ -10,7 +10,7 @@ public class AuthCeoMemberLoginHandler extends AbstractLoginHandler {
   List<CeoMember> ceoMemberList;
   PromptCeoMember promptCeoMember;
 
-  static CeoMember loginCeoMember;
+  public static CeoMember loginCeoMember;
   public static CeoMember getLoginCeoMember() {
     return loginCeoMember;
   }

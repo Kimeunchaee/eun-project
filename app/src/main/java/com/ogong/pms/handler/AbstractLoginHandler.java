@@ -4,5 +4,5 @@ import com.ogong.menu.Menu;
 
 public abstract class AbstractLoginHandler implements Command {
 
-  static int accessLevel = Menu.LOGOUT;
+  public static int accessLevel = Menu.LOGOUT;
 }

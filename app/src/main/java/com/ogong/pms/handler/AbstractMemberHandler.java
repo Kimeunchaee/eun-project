@@ -5,7 +5,7 @@ import com.ogong.pms.domain.Member;
 
 public abstract class AbstractMemberHandler implements Command {
 
-  List<Member> memberList;
+  protected List<Member> memberList;
 
   public AbstractMemberHandler(List<Member> memberList) {
     this.memberList = memberList;

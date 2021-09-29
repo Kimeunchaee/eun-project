@@ -5,7 +5,7 @@ import com.ogong.pms.domain.Cafe;
 
 public abstract class AbstractCafeHandler implements Command {
 
-  List<Cafe> cafeList;
+  protected List<Cafe> cafeList;
 
   public AbstractCafeHandler (List<Cafe> cafeList) {
     this.cafeList = cafeList;

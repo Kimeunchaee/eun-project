@@ -8,7 +8,7 @@ import com.ogong.pms.domain.Reply;
 
 public abstract class AbstractAskBoardHandler implements Command {
 
-  List<AskBoard> askBoardList;
+  protected List<AskBoard> askBoardList;
   List<Reply> replyList;
   List<Member> memberList;
   List<CeoMember> ceoMemberList;
