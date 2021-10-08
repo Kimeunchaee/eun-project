@@ -1,6 +1,5 @@
 package com.ogong.pms.handler.member;
 
-import java.util.HashMap;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
@@ -21,18 +20,10 @@ public class MemberDetailHandler implements Command {
     System.out.println();
     System.out.println("▶ 프로필");
 
-    Member member = AuthPerMemberLoginHandler.getLoginUser();
-
-    HashMap<String,String> params = new HashMap<>();
-    params.put("inputNo", String.valueOf(member.getPerNo()));
-    requestAgent.request("member.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("해당 번호의 회원이 없습니다.");
-      return;
-    }
+    Member member = null;
 
     try {
+      member = AuthPerMemberLoginHandler.getLoginUser();
       System.out.println();
       System.out.printf(" [%s]\n", member.getPerNickname());
       System.out.printf(" >> 이메일 : %s\n", member.getPerEmail());

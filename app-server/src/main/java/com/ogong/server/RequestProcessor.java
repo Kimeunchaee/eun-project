@@ -8,31 +8,40 @@ import java.util.Map;
 import java.util.Set;
 import com.google.gson.Gson;
 
-public class RequestProcessor implements AutoCloseable{
+// 역할
+//- 클라이언트와 통신하는 일을 담당한다.
+//- 클라이언트 요청이 들어오면 그 요청을 처리할 객체를 찾아 실행하는 일을 한다.
+//- 클라이언트 요청 정보를 객체에 보관하고, 응답 기능을 수행할 객체를 만드는 일을 한다.
+//
 
-  Socket socket;
+public class RequestProcessor implements AutoCloseable {
+
+  Socket socket; 
   PrintWriter out;
   BufferedReader in;
 
   Map<String,DataProcessor> dataProcessorMap;
 
-  public RequestProcessor(Socket socket,  Map<String,DataProcessor> dataProcessorMap) throws Exception {
+  public RequestProcessor(Socket socket, Map<String,DataProcessor> dataProcessorMap) throws Exception {
     this.socket = socket;
     this.dataProcessorMap = dataProcessorMap;
     out = new PrintWriter(socket.getOutputStream());
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
   }
 
+  // 아니 개발자님 얘는 왜 에러를 안 던져요?
+  // why?
+  // 내 선에서 해결할게~
   @Override
-  public void close() throws Exception {
+  public void close() {
     try {out.close();} catch (Exception e) {}
     try {in.close();} catch (Exception e) {}
     try {socket.close();} catch (Exception e) {}
+
   }
 
   public void service() throws Exception {
 
-    // 데이터 처리 담당자의 이름 목록 가져오기
     Set<String> dataProcessorNames = dataProcessorMap.keySet();
 
     while (true) {
@@ -40,32 +49,16 @@ public class RequestProcessor implements AutoCloseable{
       Request request = new Request(command, in.readLine());
       Response response = new Response();
 
-      if (command.equals("quit")) {
-        //in.readLine(); // new Request 할때 넘겨줌 
-
-        //out.println("success");
-        response.setStatus(Response.SUCCESS);
-
-        //out.println("goodbye");
-        response.setValue("goodbye");
-
-        //out.flush();
-        // 실행 결과 보내기 (flush()포함되어 있음)
-        sendResult(response);
-
+      if (command.equalsIgnoreCase("quit")) {
+        in.readLine();
+        out.println("success");
+        out.println("goodbye");
+        out.flush();
         break;
       }
 
-      // 19-e
-      // Response 객체에 보관된 실행 결과를 클라이언트에게 보내는 방법에서
-      // 명령어에 해당되는 데이터를 처리하는 객체를 사용해서 클라이언트에게 보내는걸로 수정(???)
-      //      } else if (command.startsWith("/member/")) {
-      //        Request request = new Request(command, in.readLine());    // 클라이언트의 명령과 json데이터 보관
-      //        Response response = new Response();     // 응답할 정보를 보관
-
-      // 0929 수정
-      // 명령어에 해당하는 데이터 처리 담당자를 찾는다.
       DataProcessor dataProcessor = null;
+
       for (String dataProcessorName : dataProcessorNames) {
         if (command.startsWith(dataProcessorName)) {
           dataProcessor = dataProcessorMap.get(dataProcessorName);
@@ -73,7 +66,7 @@ public class RequestProcessor implements AutoCloseable{
         }
       }
 
-      if (dataProcessor != null) { // 명령어에 해당하는 데이터 처리 담당자가 있으면
+      if (dataProcessor != null) {
         dataProcessor.execute(request, response);
 
       } else {
@@ -81,18 +74,20 @@ public class RequestProcessor implements AutoCloseable{
         response.setValue("해당 명령어를 처리할 수 없습니다.");
       }
 
-      sendResult(response); // 클라이언트에게 실행 결과를 보낸다.
+      sendResult(response);
     }
   }
 
-  private void sendResult(Response response) throws Exception {
-    // Response 객체에 보관된 실행 결과를 클라이언트에게 보낸다.
+  private void sendResult(Response response) {
     out.println(response.status);
+
     if (response.getValue() != null) {
       out.println(new Gson().toJson(response.getValue()));
+
     } else {
       out.println();
     }
     out.flush();
   }
+
 }

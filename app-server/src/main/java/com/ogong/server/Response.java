@@ -1,7 +1,8 @@
 package com.ogong.server;
 
-//역할
-//- 클라이언트에게 응답할 정보를 보관하는 일을 한다.
+// 역할 
+// - 클라이언트에게 응답할 정보를 보관하는 일을 한다.
+
 public class Response {
 
   public static final String SUCCESS = "success";
@@ -9,6 +10,13 @@ public class Response {
 
   String status;
   Object value;
+
+  public Response() {}
+
+  public Response(String status, Object value) {
+    this.status = status;
+    this.value = value;
+  }
 
   public String getStatus() {
     return status;

@@ -22,7 +22,7 @@ public abstract class Menu {
   }
 
   public int getAccessScope() {
-    return accessScope;
+    return this.accessScope;
   }
 
   public abstract void execute();

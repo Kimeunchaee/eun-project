@@ -3,10 +3,10 @@ package com.ogong.server;
 import java.util.Map;
 import com.google.gson.Gson;
 
-//역할
-//- 클라이언트 보낸 명령과 JSON 데이터를 보관하는 일을 한다.
-//- 클라이언트가 보낸 데이터를 특정 타입의 객체로 리턴하는 일을 한다.
-//
+// 역할
+// 클라이언트가 보낸 명령과 JSON 데이터를 보관하는 역할을 한다.
+// 클라이언트가 보낸 데이터를 특정 타입 객체로 리턴하는 일을 한다.
+
 public class Request {
 
   String command;

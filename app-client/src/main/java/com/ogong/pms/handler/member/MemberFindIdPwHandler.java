@@ -3,22 +3,15 @@ package com.ogong.pms.handler.member;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.pms.handler.PromptPerMember;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 import com.ogong.util.RandomPw;
 import com.ogong.util.SendMail;
 
-public class MemberFindIdPwHandler  implements Command {
+public class MemberFindIdPwHandler implements Command {
 
-  RequestAgent requestAgent;
-
-  PromptPerMember promptPerMember;
   RandomPw randomPw;
 
-  public MemberFindIdPwHandler( RequestAgent requestAgent, PromptPerMember promptPerMember, RandomPw randomPw) {
-    this.requestAgent = requestAgent;
-    this.promptPerMember = promptPerMember;
+  public MemberFindIdPwHandler(RandomPw randomPw) {
     this.randomPw = randomPw;
   }
 

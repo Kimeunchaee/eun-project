@@ -1,55 +1,45 @@
 package com.ogong.pms.handler;
 
-import java.util.List;
+import java.util.HashMap;
 import com.ogong.menu.Menu;
 import com.ogong.pms.domain.Member;
+import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
-public class AuthPerMemberLoginHandler extends AbstractLoginHandler {
+public class AuthPerMemberLoginHandler extends AbstractLoginHandler implements Command {
 
-  PromptPerMember promptPerMember;
-  List<Member> memberList;
+  RequestAgent requestAgent;
 
   public static Member loginUser;
   public static Member getLoginUser() {
     return loginUser;
   }
 
-  public static int getUserAccessLevel() {
-    return accessLevel;
-  }
-
-  public AuthPerMemberLoginHandler(PromptPerMember promptPerMember, List<Member> memberList) {
-    this.promptPerMember = promptPerMember;
-    this.memberList = memberList;
+  public AuthPerMemberLoginHandler(RequestAgent requestAgent) {
+    this.requestAgent = requestAgent;
   }
 
   @Override
-  public void execute(CommandRequest request) {
+  public void execute(CommandRequest request) throws Exception {
 
     System.out.println();
     String inputEmail = Prompt.inputString(" 이메일 : ");
-    String inputPassword = "";
-    Member member = promptPerMember.findByMemberEmail(inputEmail);
+    String inputPassword = Prompt.inputString(" 비밀번호 : ");
 
-    if (member == null) {
-      System.out.println(" >> 등록된 회원이 아닙니다.");
-    }
+    HashMap<String,String> params = new HashMap<>();
+    params.put("email", inputEmail);
+    params.put("password", inputPassword);
 
-    while (member != null) {
-      inputPassword = Prompt.inputString(" 비밀번호 : ");
+    requestAgent.request("member.selectOneByEmailPassword", params);
 
-      if (member.getPerPassword().equals(inputPassword)) {
-        member.setPerEmail(inputEmail);
-        member.setPerPassword(inputPassword);
-        System.out.println();
-        System.out.printf(" >> '%s'님 환영합니다!\n", member.getPerNickname());
-        loginUser = member;
-        accessLevel = Menu.PER_LOGIN;
-        return;
-      }
-      System.out.println(" >> 비밀번호를 다시 입력하세요.\n");
-      return;
+    if (requestAgent.getStatus().equals(RequestAgent.SUCCESS)) {
+      Member member = requestAgent.getObject(Member.class);
+      System.out.printf("%s님 환영합니다!\n", member.getPerNickname());
+      loginUser = member;
+      accessLevel = Menu.PER_LOGIN;
+
+    } else {
+      System.out.println("이메일과 암호가 일치하는 회원을 찾을 수 없습니다.");
     }
   } 
 }
