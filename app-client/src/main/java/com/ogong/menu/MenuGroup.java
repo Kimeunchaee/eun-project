@@ -13,7 +13,7 @@ public class MenuGroup extends Menu {
   ArrayList<Menu> childs = new ArrayList<>();
 
   boolean disablePrevMenu;
-  String prevMenuTitle = "이전 메뉴";
+  String prevMenuTitle = "👈 이전 메뉴";
 
   // 메뉴 목록을 출력할 때 출력 여부를 결정할 객체를 보관한다.
   MenuFilter menuFilter;

@@ -1,18 +1,18 @@
 package com.ogong.pms.handler.member;
 
-import java.util.HashMap;
+import java.util.List;
+import com.ogong.pms.dao.MemberDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class MemberUpdateHandler implements Command {
 
-  RequestAgent requestAgent;
+  MemberDao memberDao;
 
-  public MemberUpdateHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public MemberUpdateHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
   }
 
   @Override
@@ -21,19 +21,10 @@ public class MemberUpdateHandler implements Command {
     System.out.println("▶ 프로필 수정");
     System.out.println();
 
-    int inputNo = (int) request.getAttribute("inputNo");
+    int no = (int) request.getAttribute("memberNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("inputNo", String.valueOf(inputNo));
-
-    requestAgent.request("member.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 해당 회원이 없습니다.");
-      return;
-    }
-
-    Member member = requestAgent.getObject(Member.class);
+    List<Member> memberList = memberDao.findAll();
+    Member member = memberDao.findByNo(no);
 
     System.out.println("1. 닉네임");
     System.out.println("2. 사진");
@@ -50,16 +41,58 @@ public class MemberUpdateHandler implements Command {
     switch (selectNo) {
       case 1: 
         perNickName = Prompt.inputString(" 닉네임(" + member.getPerNickname()  + ") : ");
+        while (true) {
+          for (Member comparisonMember : memberList) {
+            if (perNickName.equals(comparisonMember.getPerNickname())) {
+              System.out.println(" >> 이미 사용중인 닉네임입니다.");
+              continue;
+            }
+          }
+          break;
+        }
         break;
+
       case 2: 
         perPhoto = Prompt.inputString(" 사  진(" + member.getPerPhoto() + ") : ");
         break;
+
       case 3:
-        perEmail = Prompt.inputString(" 이메일(" + member.getPerEmail() + ") : ");
+        while (true) {
+          perEmail = Prompt.inputString(" 이메일(" + member.getPerEmail() + ") : ");
+          if (!perEmail.contains("@") ||
+              !perEmail.contains(".com") || perEmail.length() < 6) {
+            System.out.println(" >> 정확한 이메일 양식으로 입력해 주세요.");
+            continue;
+          }
+          break;
+        }
         break;
+
       case 4:
-        perPassword = Prompt.inputString(" 비밀번호(" + member.getPerPassword() + ") : ");
+        while (true) {
+          perPassword = Prompt.inputString(" 비밀번호(" + member.getPerPassword() + ") : ");
+          if (perPassword.length() < 8 || (!perPassword.contains("!") && !perPassword.contains("@")
+              && !perPassword.contains("#") && !perPassword.contains("$")
+              && !perPassword.contains("^") && !perPassword.contains("%")
+              && !perPassword.contains("&") && !perPassword.contains("*"))) {
+            System.out.println(" >> 8자 이상 특수문자를 포함시켜 주세요.");
+            continue;
+          }
+          break;
+        }
+
+        while (true) {
+          String pw =  Prompt.inputString(" 비밀번호 확인 : ");
+          if (!pw.equals(perPassword)) {
+            System.out.println("\n >> 확인 실패!\n");
+            continue;
+          } else {
+            System.out.println("\n >> 확인 완료!\n");
+          }
+          break;
+        }
         break;
+
       default : 
         System.out.println(" >> 올바른 번호를 입력해 주세요.");
         return;
@@ -81,14 +114,7 @@ public class MemberUpdateHandler implements Command {
       member.setPerPassword(perPassword);
     }
 
-    requestAgent.request("member.update", member);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 회원 변경 실패!");
-      System.out.println(requestAgent.getObject(String.class));
-      return;
-    }
-
+    memberDao.update(member);
     System.out.println(" >> 회원 정보를 변경하였습니다.");
 
   }

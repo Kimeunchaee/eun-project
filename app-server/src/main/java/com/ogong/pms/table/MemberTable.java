@@ -17,9 +17,14 @@ public class MemberTable extends JsonDataTable<Member> implements DataProcessor 
   public void execute(Request request, Response response) throws Exception {
     switch (request.getCommand()) {
       case "member.insert" : insert(request, response); break;
+      case "member.selectList" : selectList(request, response); break;
       case "member.selectOneByEmailPassword" : selectOneByEmailPassword(request, response); break;
+      case "member.selectOneByEmail" : selectOneByEmail(request, response); break;
+      case "member.selectOneByPassword" : selectOneByPassword(request, response); break;
       case "member.selectOne" : selectOne(request, response); break;
       case "member.update" : update(request, response); break;
+      case "member.delete" : delete(request, response); break;
+      case "member.selectOnByNickname" : selectOnByNickname(request, response); break;
       default : 
         response.setStatus(Response.FAIL);
         response.setValue("해당 명령을 지원하지 않습니다.");
@@ -30,6 +35,11 @@ public class MemberTable extends JsonDataTable<Member> implements DataProcessor 
     Member member = request.getObject(Member.class);
     list.add(member);
     response.setStatus(Response.SUCCESS);
+  }
+
+  private void selectList(Request request, Response response) throws Exception {
+    response.setStatus(Response.SUCCESS);
+    response.setValue(list);
   }
 
   private void selectOneByEmailPassword(Request request, Response response) throws Exception {
@@ -53,8 +63,70 @@ public class MemberTable extends JsonDataTable<Member> implements DataProcessor 
     }
   }
 
+  private void selectOneByEmail(Request request, Response response) throws Exception {
+    String email = request.getParameter("email");
+
+    Member member = null;
+    for (Member m : list) {
+      if (m.getPerEmail().equals(email)) {
+        member = m;
+        break;
+      }
+    }
+
+    if (member != null) {
+      response.setStatus(Response.SUCCESS);
+      response.setValue(member);
+    } else {
+      response.setStatus(Response.FAIL);
+      response.setValue("해당 이메일을 가진 회원을 찾을 수 없습니다.");
+    }
+  }
+
+  private void selectOneByPassword(Request request, Response response) throws Exception {
+    String password = request.getParameter("password");
+
+    Member member = null;
+    for (Member m : list) {
+      if (m.getPerPassword().equals(password)) {
+        member = m;
+        break;
+      }
+    }
+
+    if (member != null) {
+      response.setStatus(Response.SUCCESS);
+      response.setValue(member);
+    } else {
+      response.setStatus(Response.FAIL);
+      response.setValue("비밀번호가 일치하지 않습니다.");
+    }
+  }
+
+  private void selectOnByNickname(Request request, Response response) throws Exception {
+    String nickname = request.getParameter("memberNick");
+
+    Member member = null;
+    for (Member m : list) {
+      if (m.getPerNickname().equals(nickname)) {
+        member = m;
+        break;
+      }
+    }
+
+    System.out.println("test");
+
+    if (member != null) {
+      response.setStatus(Response.SUCCESS);
+      response.setValue(member);
+    } else {
+      response.setStatus(Response.FAIL);
+      response.setValue("해당 닉네임을 가진 회원을 찾을 수 없습니다.");
+    }
+  }
+
   private void selectOne(Request request, Response response) throws Exception {
-    int no = Integer.parseInt(request.getParameter("inputNo"));
+    int no = Integer.parseInt(request.getParameter("memberNo"));
     Member m = findByNo(no);
 
     if (m != null) {
@@ -77,6 +149,20 @@ public class MemberTable extends JsonDataTable<Member> implements DataProcessor 
     }
 
     list.set(index, member);
+    response.setStatus(Response.SUCCESS);
+  }
+
+  private void delete(Request request, Response response) throws Exception {
+    int no = Integer.parseInt(request.getParameter("memberNo"));
+    int index = indexOf(no);
+
+    if (index == -1) {
+      response.setStatus(Response.FAIL);
+      response.setValue("해당 번호의 회원을 찾을 수 없습니다.");
+      return;
+    }
+
+    list.remove(index);
     response.setStatus(Response.SUCCESS);
   }
 

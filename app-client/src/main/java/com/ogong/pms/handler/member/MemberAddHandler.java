@@ -1,19 +1,19 @@
 package com.ogong.pms.handler.member;
 
 import java.sql.Date;
+import java.util.List;
+import com.ogong.pms.dao.MemberDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class MemberAddHandler implements Command {
 
-  int perNo = 7;
-  RequestAgent requestAgent;
+  MemberDao memberDao;
 
-  public MemberAddHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public MemberAddHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
   }
 
   // 개인
@@ -23,26 +23,18 @@ public class MemberAddHandler implements Command {
     System.out.println("▶ 회원가입");
     System.out.println();
 
+    List<Member> memberList = memberDao.findAll();
     Member member = new Member();
 
-    //    requestAgent.request("member.selectList", null);
-    //
-    //    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-    //      System.out.println("목록 조회 실패!");
-    //      return;
-    //    }
+    String inputNewNick;
+    inputNewNick = Prompt.inputString(" 닉네임 : ");
+    for (Member comparisonMember : memberList) {
+      if (inputNewNick.equals(comparisonMember.getPerNickname())) {
+        System.out.println(" >> 이미 사용 중인 닉네임입니다.");
+        return;
+      }
+    }
 
-    //    Collection<Member> memberList = requestAgent.getObjects(Member.class);
-    //
-    //    String inputNewNick;
-    //    inputNewNick = Prompt.inputString(" 닉네임 : ");
-    //    for (Member comparisonMember : memberList) {
-    //      if (inputNewNick.equals(comparisonMember.getPerNickname())) {
-    //        System.out.println(" >> 중복된 닉네임입니다.");
-    //        return;
-    //      }
-    //    }
-    String inputNewNick = Prompt.inputString(" 닉네임 : ");
     member.setPerNickname(inputNewNick);
     member.setPerPhoto(Prompt.inputString(" 사  진 : "));
 
@@ -84,17 +76,20 @@ public class MemberAddHandler implements Command {
     }
 
     member.setPerRegisteredDate(new Date(System.currentTimeMillis()));
-    member.setPerNo(perNo++);
-    //memberList.add(member);
 
-    requestAgent.request("member.insert", member);
-
-    if (requestAgent.getStatus().equals(RequestAgent.SUCCESS)) {
-      System.out.println(" >> 회원가입이 완료되었습니다.");
+    // 마지막 회원번호 찾아서 신규회원 등록시 +1 되도록 기능 구현
+    Member lastMember = null;
+    if (!memberList.isEmpty()) {
+      lastMember = memberList.get(memberList.size() - 1);
+      member.setPerNo(lastMember.getPerNo() +1);
     } else {
-      System.out.println(" >> 회원가입이 실패되었습니다.");
+      member.setPerNo(1);
     }
+    member.setPerStatus(Member.INUSER);
 
+    memberDao.insert(member);
+
+    System.out.println(" >> 회원가입이 완료되었습니다.");
   }
 }
 

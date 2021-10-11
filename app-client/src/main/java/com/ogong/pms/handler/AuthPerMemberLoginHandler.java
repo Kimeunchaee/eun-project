@@ -34,12 +34,20 @@ public class AuthPerMemberLoginHandler extends AbstractLoginHandler implements C
 
     if (requestAgent.getStatus().equals(RequestAgent.SUCCESS)) {
       Member member = requestAgent.getObject(Member.class);
-      System.out.printf("%s님 환영합니다!\n", member.getPerNickname());
+
+      if (member.getPerStatus() == Member.OUTUSER) {
+        System.out.println(" >> 회원가입을 진행해 주세요.");
+        return;
+      }
+
+      System.out.println();
+      System.out.printf(" %s님 환영합니다!\n", member.getPerNickname());
       loginUser = member;
       accessLevel = Menu.PER_LOGIN;
 
     } else {
-      System.out.println("이메일과 암호가 일치하는 회원을 찾을 수 없습니다.");
+      System.out.println("\n >> 이메일과 암호가 일치하는 회원을 찾을 수 없습니다.");
+      return;
     }
   } 
 }

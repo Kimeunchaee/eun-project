@@ -1,18 +1,18 @@
 package com.ogong.pms.handler.member;
 
+import com.ogong.pms.dao.MemberDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class MemberDetailHandler implements Command {
 
-  RequestAgent requestAgent;
+  MemberDao memberDao;
 
-  public MemberDetailHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public MemberDetailHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
   }
 
   @Override
@@ -20,10 +20,17 @@ public class MemberDetailHandler implements Command {
     System.out.println();
     System.out.println("▶ 프로필");
 
-    Member member = null;
+    int no;
+    try {
+      no = AuthPerMemberLoginHandler.getLoginUser().getPerNo();
+    } catch (NullPointerException e) {
+      System.out.println(" >> 로그인 한 회원만 볼 수 있습니다.");
+      return;
+    }
+
+    Member member = memberDao.findByNo(no);
 
     try {
-      member = AuthPerMemberLoginHandler.getLoginUser();
       System.out.println();
       System.out.printf(" [%s]\n", member.getPerNickname());
       System.out.printf(" >> 이메일 : %s\n", member.getPerEmail());
@@ -32,14 +39,14 @@ public class MemberDetailHandler implements Command {
 
     } catch (NullPointerException e) {
       System.out.println();
-      System.out.println(" >> 로그인 하세요.");
+      System.out.println(" >> 프로필 실행 오류");
     }
 
-    if(member == null) {
+    if (member == null) {
       return;
     }
 
-    request.setAttribute("inputNo", member.getPerNo());
+    request.setAttribute("memberNo", member.getPerNo());
 
     System.out.println();
     System.out.println("1. 수정");
