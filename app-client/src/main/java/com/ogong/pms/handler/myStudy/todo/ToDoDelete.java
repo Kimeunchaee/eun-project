@@ -1,19 +1,18 @@
 package com.ogong.pms.handler.myStudy.todo;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.domain.ToDo;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class ToDoDelete implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao; 
 
-  public ToDoDelete(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public ToDoDelete(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   //삭제
@@ -24,17 +23,10 @@ public class ToDoDelete implements Command {
     System.out.println();
 
     int[] arry = (int[]) request.getAttribute("studyTodoNo");
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arry[0]));
 
-    requestAgent.request("study.selectOne", params);
+    int no = arry[0];
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 출력 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(no);
     ToDo todo = myStudy.getMyStudyToDo().get(arry[1]);
 
     String input = Prompt.inputString(" 정말 삭제하시겠습니까? (네 / 아니오)");
@@ -46,12 +38,7 @@ public class ToDoDelete implements Command {
 
     myStudy.getMyStudyToDo().remove(todo);
 
-    requestAgent.request("study.update", myStudy);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 해당 스터디에서 삭제 오류");
-      return;
-    }
+    studyDao.update(myStudy);
 
     System.out.println(" >> To-Do를 삭제하였습니다.");
     request.getRequestDispatcher("/myStudy/todoList").forward(request);

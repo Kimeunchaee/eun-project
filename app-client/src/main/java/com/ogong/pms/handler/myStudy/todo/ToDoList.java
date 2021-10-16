@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.todo;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.domain.ToDo;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class ToDoList implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public ToDoList(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public ToDoList(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   //등록
@@ -24,17 +23,9 @@ public class ToDoList implements Command {
     System.out.println("▶ To-Do List 목록");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo"); 
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 출력 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(no);
     List <ToDo> todoList = myStudy.getMyStudyToDo();
 
     if (todoList.isEmpty()) {

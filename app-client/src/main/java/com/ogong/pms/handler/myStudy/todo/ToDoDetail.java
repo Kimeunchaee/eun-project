@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.todo;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.domain.ToDo;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class ToDoDetail implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public ToDoDetail(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public ToDoDetail(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   //상세
@@ -24,17 +23,9 @@ public class ToDoDetail implements Command {
     System.out.println("▶ To-Do List 상세보기");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo"); 
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 출력 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(no);
     List <ToDo> todoList = myStudy.getMyStudyToDo();
 
     while (true) {
@@ -43,7 +34,6 @@ public class ToDoDetail implements Command {
 
       int[] arry = new int[2]; // studyNo와 해당 todo 번호 둘 다 넘기려고 배열로 받음
       arry[0] = (int) request.getAttribute("inputNo"); // study 번호를 넘겨 줌
-
 
       for (int i = 0; i < todoList.size(); i++) {
         if (todoList.get(i).getTodoNo() == inputTodoNo) {

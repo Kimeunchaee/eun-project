@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.freeBoard;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.FreeBoard;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class FreeBoardUpdateHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public FreeBoardUpdateHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public FreeBoardUpdateHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -25,17 +24,10 @@ public class FreeBoardUpdateHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNoFreeNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arry[0]));
+    int no = arry[0];
 
-    requestAgent.request("study.selectOne", params);
+    Study myStudy = studyDao.findByNo(no);
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
     FreeBoard freeBoard = myStudy.getMyStudyFreeBoard().get(arry[1]);
 
     if (freeBoard.getFreeBoardWriter().getPerNo() != AuthPerMemberLoginHandler.getLoginUser().getPerNo()) {
@@ -59,14 +51,9 @@ public class FreeBoardUpdateHandler implements Command {
     freeBoard.setFreeBoardContent(freeBoardContent);
     freeBoard.setFreeBoardAtcFile(freeBoardAtcFile);
 
-    requestAgent.request("study.update", myStudy);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" 게시글 수정 오류");
-      return;
-    }
-
+    studyDao.update(myStudy);
     System.out.println(" >> 게시글을 수정하였습니다.");
+
     request.getRequestDispatcher("/myStudy/freeBoardList").forward(request);
     return;
   }

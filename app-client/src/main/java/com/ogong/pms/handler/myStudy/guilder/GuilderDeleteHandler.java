@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.guilder;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class GuilderDeleteHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public GuilderDeleteHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public GuilderDeleteHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -23,18 +22,9 @@ public class GuilderDeleteHandler implements Command {
     System.out.println("▶ 구성원 탈퇴시키기");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo"); 
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
-
+    Study myStudy = studyDao.findByNo(no);
     List<Member> guilderList = myStudy.getMembers();
 
     if (myStudy.getMembers().isEmpty()) {
@@ -58,7 +48,7 @@ public class GuilderDeleteHandler implements Command {
             return;
           }
 
-          //          myStudy.getMembers().remove(guilder);
+          // myStudy.getMembers().remove(guilder);
           System.out.println();
           System.out.println(" >> 구성원이 탈퇴되었습니다.");
           guilder = guilderMember;
@@ -74,12 +64,7 @@ public class GuilderDeleteHandler implements Command {
       }
 
       myStudy.getMembers().remove(guilder);
-      requestAgent.request("study.update", myStudy);
-
-      if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-        System.out.println(" >> 구성원 탈퇴 실패!");
-        return;
-      }
+      studyDao.update(myStudy);
       return;
     }
   }

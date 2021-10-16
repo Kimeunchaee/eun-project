@@ -1,22 +1,22 @@
 package com.ogong.pms.handler.study;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class StudyJoinHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public StudyJoinHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public StudyJoinHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
+  @Override
   public void execute(CommandRequest request) throws Exception {
     System.out.println();
     System.out.println("▶ 스터디 신청");
@@ -24,17 +24,9 @@ public class StudyJoinHandler implements Command {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo");
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디를 찾을 수 없습니다.");
-      return;
-    }
-
-    Study study = requestAgent.getObject(Study.class);
+    Study study = studyDao.findByNo(no);
 
     for (Member pM : study.getMembers()) {
       if (pM.getPerNickname().equals(member.getPerNickname())) {
@@ -61,12 +53,9 @@ public class StudyJoinHandler implements Command {
       return;
     }
     study.getWatingMember().add(member);
-    requestAgent.request("study.update", study);
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("스터디 참여 실패!");
-      return;
-    }
+    studyDao.update(study);
+
     System.out.println();
     System.out.println(" >> 참여 신청이 완료되었습니다.\n   승인이 완료될 때까지 기다려 주세요.");
   }

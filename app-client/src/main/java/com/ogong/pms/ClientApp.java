@@ -16,6 +16,7 @@ import com.ogong.pms.dao.impl.NetAskBoardDao;
 import com.ogong.pms.dao.impl.NetCafeDao;
 import com.ogong.pms.dao.impl.NetCeoMemberDao;
 import com.ogong.pms.dao.impl.NetMemberDao;
+import com.ogong.pms.dao.impl.NetStudyDao;
 import com.ogong.pms.handler.AbstractLoginHandler;
 import com.ogong.pms.handler.AuthAdminLoginHandler;
 import com.ogong.pms.handler.AuthAdminLogoutHandler;
@@ -201,6 +202,7 @@ public class ClientApp {
     NetCeoMemberDao ceoMemberDao = new NetCeoMemberDao(requestAgent);
     NetAskBoardDao askBoardDao = new NetAskBoardDao(requestAgent);
     NetCafeDao cafeDao = new NetCafeDao(requestAgent);
+    NetStudyDao studyDao = new NetStudyDao(requestAgent);
 
     System.out.println("서버에 접속 성공!"); // 접속 확인용
 
@@ -259,22 +261,22 @@ public class ClientApp {
 
     commandMap.put("/study/delete", new AdminStudyDeleteHandler(requestAgent));
 
-    commandMap.put("/study/add", new StudyAddHandler(requestAgent));
-    commandMap.put("/study/list", new StudyListHandler(requestAgent));
-    commandMap.put("/study/detail", new StudyDetailHandler(requestAgent));
-    commandMap.put("/study/search", new StudySearchHandler(requestAgent));
-    commandMap.put("/study/join", new StudyJoinHandler(requestAgent));
+    commandMap.put("/study/add", new StudyAddHandler(studyDao));
+    commandMap.put("/study/list", new StudyListHandler(studyDao));
+    commandMap.put("/study/detail", new StudyDetailHandler(studyDao));
+    commandMap.put("/study/search", new StudySearchHandler(studyDao));
+    commandMap.put("/study/join", new StudyJoinHandler(studyDao));
 
-    commandMap.put("/myStudy/list", new MyStudyListHandler(requestAgent));
-    commandMap.put("/myStudy/detail", new MyStudyDetailHandler(requestAgent));
-    commandMap.put("/myStudy/update", new MyStudyUpdateHandler(requestAgent));
-    commandMap.put("/myStudy/delete", new MyStudyDeleteHandler(requestAgent));
-    commandMap.put("/myStudy/exit", new MyStudyExitHandler(requestAgent));
-    commandMap.put("/myStudy/guilder", new GuilderListHandler(requestAgent));
+    commandMap.put("/myStudy/list", new MyStudyListHandler(studyDao));
+    commandMap.put("/myStudy/detail", new MyStudyDetailHandler(studyDao));
+    commandMap.put("/myStudy/update", new MyStudyUpdateHandler(studyDao));
+    commandMap.put("/myStudy/delete", new MyStudyDeleteHandler(studyDao));
+    commandMap.put("/myStudy/exit", new MyStudyExitHandler(studyDao));
+    commandMap.put("/myStudy/guilder", new GuilderListHandler(studyDao));
 
-    commandMap.put("/myStudy/listGuilder", new WatingGuilderListHandler(requestAgent));
-    commandMap.put("/myStudy/entrustGuilder", new GuilderEntrustHandler(requestAgent));
-    commandMap.put("/myStudy/deleteGuilder", new GuilderDeleteHandler(requestAgent));
+    commandMap.put("/myStudy/listGuilder", new WatingGuilderListHandler(studyDao));
+    commandMap.put("/myStudy/entrustGuilder", new GuilderEntrustHandler(studyDao));
+    commandMap.put("/myStudy/deleteGuilder", new GuilderDeleteHandler(studyDao));
 
     commandMap.put("/myStudy/calenderAdd", new CalenderAddHandler(requestAgent));
     commandMap.put("/myStudy/calenderList", new CalenderListHandler(requestAgent));
@@ -283,26 +285,26 @@ public class ClientApp {
     commandMap.put("/myStudy/calenderDelete", new CalenderDeleteHandler(requestAgent));
 
     PromptFreeBoard promptFreeBoard = new PromptFreeBoard(requestAgent);
-    commandMap.put("/myStudy/freeBoardList", new FreeBoardListHandler(requestAgent));
-    commandMap.put("/myStudy/freeBoardAdd", new FreeBoardAddHandler(requestAgent));
-    commandMap.put("/myStudy/freeBoardDetail", new FreeBoardDetailHandler(requestAgent, promptFreeBoard));
-    commandMap.put("/myStudy/freeBoardUpdate", new FreeBoardUpdateHandler(requestAgent));
-    commandMap.put("/myStudy/freeBoardDelete", new FreeBoardDeleteHandler(requestAgent));
+    commandMap.put("/myStudy/freeBoardList", new FreeBoardListHandler(studyDao));
+    commandMap.put("/myStudy/freeBoardAdd", new FreeBoardAddHandler(studyDao));
+    commandMap.put("/myStudy/freeBoardDetail", new FreeBoardDetailHandler(studyDao, promptFreeBoard));
+    commandMap.put("/myStudy/freeBoardUpdate", new FreeBoardUpdateHandler(studyDao));
+    commandMap.put("/myStudy/freeBoardDelete", new FreeBoardDeleteHandler(studyDao));
 
     //    Socket chatSocket = new Socket();
     //    commandMap.put("/myStudy/chat", new MyStudyChat(requestAgent));
     //    commandMap.put("/myStudy/chatOpen", new MySocketServer(chatSocket, requestAgent));
     //    commandMap.put("/myStudy/chatStart", new MySocketClient(requestAgent));
 
-    commandMap.put("/myStudy/freeBoard/commentDelete", new CommentDeleteHandler(requestAgent));
-    commandMap.put("/myStudy/freeBoard/commentAdd", new CommentAddHandler(requestAgent));
-    commandMap.put("/myStudy/freeBoard/commentUpdate", new CommentUpdateHandler(requestAgent));
+    commandMap.put("/myStudy/freeBoard/commentDelete", new CommentDeleteHandler(studyDao));
+    commandMap.put("/myStudy/freeBoard/commentAdd", new CommentAddHandler(studyDao));
+    commandMap.put("/myStudy/freeBoard/commentUpdate", new CommentUpdateHandler(studyDao));
 
-    commandMap.put("/myStudy/todoAdd", new ToDoAdd(requestAgent));
-    commandMap.put("/myStudy/todoList", new ToDoList(requestAgent));
-    commandMap.put("/myStudy/todoDetail", new ToDoDetail(requestAgent));
-    commandMap.put("/myStudy/todoUpdate", new ToDoUpdate(requestAgent));
-    commandMap.put("/myStudy/todoDelete", new ToDoDelete(requestAgent));
+    commandMap.put("/myStudy/todoAdd", new ToDoAdd(studyDao));
+    commandMap.put("/myStudy/todoList", new ToDoList(studyDao));
+    commandMap.put("/myStudy/todoDetail", new ToDoDetail(studyDao));
+    commandMap.put("/myStudy/todoUpdate", new ToDoUpdate(studyDao));
+    commandMap.put("/myStudy/todoDelete", new ToDoDelete(studyDao));
 
     commandMap.put("/cafe/list", new CafeListHandler(cafeDao));
     commandMap.put("/cafe/detail", new CafeDetailHandler(cafeDao));

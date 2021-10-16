@@ -1,7 +1,5 @@
-package com.ogong.pms.handler.myStudy;
+package com.ogong.pms.handler.myStudy.chat;
 
-import com.ogong.chat.MySocketClient;
-import com.ogong.chat.MySocketServer;
 import com.ogong.util.Prompt;
 
 public class MyStudyChat /* implements Command */ {

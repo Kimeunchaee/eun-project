@@ -1,21 +1,20 @@
 package com.ogong.pms.handler.study;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class StudyAddHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public StudyAddHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public StudyAddHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -24,15 +23,9 @@ public class StudyAddHandler implements Command {
     System.out.println("▶ 스터디 등록");
     System.out.println();
 
-    requestAgent.request("study.selectList", null);
+    List<Study> studyList = studyDao.findAll();
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("실패");
-      return;
-    }
-
-    Collection<Study> studyList = requestAgent.getObjects(Study.class);
-    List<Study> arrayStudy = new ArrayList<>(studyList);
+    //List<Study> arrayStudy = new ArrayList<>(studyList);
 
     Study study = new Study();
 
@@ -162,15 +155,6 @@ public class StudyAddHandler implements Command {
     }
     study.setIntroduction(introduction);
 
-    // 마지막 스터디 번호 찾아서 새 스터디 등록시 +1 되도록 기능 구현
-    Study lastStudy = null;
-    if (!arrayStudy.isEmpty()) {
-      lastStudy = arrayStudy.get(arrayStudy.size() - 1);
-      study.setStudyNo(lastStudy.getStudyNo() + 1);
-    } else {
-      study.setStudyNo(1);
-    }
-
     // 작성자,구성원,캘린더,자유게시판
     study.setOwner(AuthPerMemberLoginHandler.getLoginUser());
     study.setMembers(new ArrayList<>());
@@ -185,11 +169,24 @@ public class StudyAddHandler implements Command {
       System.out.println(" >> 등록이 취소되었습니다.");
       return;
     }
-    // 고유번호
-    requestAgent.request("study.insert", study);
 
-    if (requestAgent.getStatus().equals(RequestAgent.SUCCESS)) {
-      System.out.println(" >> 스터디가 등록되었습니다.");
-    } 
+    // 마지막 스터디 번호 찾아서 새 스터디 등록시 +1 되도록 기능 구현
+    //    Study lastStudy = null;
+    //    if (!arrayStudy.isEmpty()) {
+    //      lastStudy = arrayStudy.get(arrayStudy.size() - 1);
+    //      study.setStudyNo(lastStudy.getStudyNo() + 1);
+    //    } else {
+    //      study.setStudyNo(1);
+    //    }
+
+    Study lastStudy = null;
+    if (!studyList.isEmpty()) {
+      lastStudy = studyList.get(studyList.size() - 1);
+      study.setStudyNo(lastStudy.getStudyNo() + 1);
+    } else {
+      study.setStudyNo(1);
+    }
+
+    studyDao.insert(study);
   }
 }

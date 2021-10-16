@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class MyStudyDetailHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public MyStudyDetailHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public MyStudyDetailHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -25,18 +24,22 @@ public class MyStudyDetailHandler implements Command {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    int inputNo = Prompt.inputInt(" 번호  : ");
-
-    HashMap<String,String> params = new HashMap<>();
-    params.put("memberNo",String.valueOf(member.getPerNo()));
-    params.put("studyNo", String.valueOf(inputNo));
-
-    requestAgent.request("study.my.selectOne", params);
+    int studyNo = Prompt.inputInt(" 번호  : ");
+    int memberNo = member.getPerNo();
 
     Study s = new Study();
-    if (requestAgent.getStatus().equals(RequestAgent.SUCCESS)) {
-      Study myStudy = requestAgent.getObject(Study.class);
-      System.out.printf(" \n(%s)\n", myStudy.getStudyNo());
+
+    Study myStudy = studyDao.findByMyStudy(memberNo, studyNo);
+
+    if (myStudy != null) {
+      System.out.printf("\n (%s)", myStudy.getStudyNo());
+
+      if (myStudy.getOwner().getPerNickname().equals(member.getPerNickname())) {
+        System.out.println(" 👤");
+      } else if (myStudy.getMemberNames().contains(member.getPerNickname())) {
+        System.out.println(" 👥");
+      }
+
       System.out.printf(" [%s]\n", myStudy.getStudyTitle());
       System.out.printf(" >> 조장 : %s\n", myStudy.getOwner().getPerNickname());
       System.out.printf(" >> 분야 : %s\n", myStudy.getSubject());
@@ -62,12 +65,12 @@ public class MyStudyDetailHandler implements Command {
     System.out.println("5. 화상미팅");
     System.out.println("6. 탈퇴하기");  
 
-
     if (s.getOwner().getPerNickname().equals(
         AuthPerMemberLoginHandler.loginUser.getPerNickname())) {
       System.out.println("7. 스터디 수정");
       System.out.println("8. 스터디 삭제");
     }
+
     System.out.println("0. 뒤로 가기");
 
     request.setAttribute("inputNo", s.getStudyNo());
@@ -82,6 +85,7 @@ public class MyStudyDetailHandler implements Command {
       case 6: request.getRequestDispatcher("/myStudy/exit").forward(request); return;  
       case 7: request.getRequestDispatcher("/myStudy/update").forward(request); return;
       case 8: request.getRequestDispatcher("/myStudy/delete").forward(request); return;
+      case 0: request.getRequestDispatcher("/myStudy/list").forward(request); return;
       default : return;
     }
   }

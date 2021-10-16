@@ -1,21 +1,20 @@
 package com.ogong.pms.handler.myStudy.guilder;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class WatingGuilderListHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public WatingGuilderListHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public WatingGuilderListHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   // 스터디 구성원 목록
@@ -25,17 +24,9 @@ public class WatingGuilderListHandler implements Command {
     System.out.println("▶ 승인 대기 목록");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo",String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo"); 
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(no);
 
     if (!myStudy.getWatingMemberNames().isEmpty()) {
 
@@ -50,8 +41,8 @@ public class WatingGuilderListHandler implements Command {
 
       int inputGuilerNo = Prompt.inputInt("선택> ");
       switch (inputGuilerNo) {
-        case 1: agreeStudyMember(myStudy, requestAgent); return;
-        case 2: disagreeStudyMember(myStudy, requestAgent); return;
+        case 1: agreeStudyMember(myStudy, studyDao); return;
+        case 2: disagreeStudyMember(myStudy, studyDao); return;
         case 0: return;
         default: return;
       }
@@ -59,7 +50,7 @@ public class WatingGuilderListHandler implements Command {
   }
 
   // 승인
-  private void agreeStudyMember(Study myStudy, RequestAgent requestAgent) throws Exception {
+  private void agreeStudyMember(Study myStudy, StudyDao studyDao) throws Exception {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
@@ -92,19 +83,14 @@ public class WatingGuilderListHandler implements Command {
           myStudy.getWatingMember().remove(m);
         }
 
-        requestAgent.request("study.update", myStudy);
-
-        if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-          System.out.println("구성원 승인 실패!");
-          return;
-        }
+        studyDao.update(myStudy);
         return;
       }
     }
   }
 
   // 거절
-  private void disagreeStudyMember(Study myStudy, RequestAgent requestAgent) throws Exception {
+  private void disagreeStudyMember(Study myStudy, StudyDao studyDao) throws Exception {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
@@ -131,12 +117,7 @@ public class WatingGuilderListHandler implements Command {
         if (m != null) {
           myStudy.getWatingMember().remove(m);
 
-          requestAgent.request("study.update", myStudy);
-
-          if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-            System.out.println("스터디 거절 실패!");
-            return;
-          }
+          studyDao.update(myStudy);
         }
         return;
       }

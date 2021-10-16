@@ -1,19 +1,18 @@
 package com.ogong.pms.handler.myStudy;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class MyStudyUpdateHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public MyStudyUpdateHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public MyStudyUpdateHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -22,18 +21,9 @@ public class MyStudyUpdateHandler implements Command {
     System.out.println("▶ 스터디 수정");
     System.out.println();
 
+    int no = (int) request.getAttribute("inputNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디를 찾을 수 없습니다.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(no);
 
     if (myStudy.getOwner().getPerNo() != AuthPerMemberLoginHandler.getLoginUser().getPerNo()) {
       System.out.println(" >> 수정 권한이 없습니다.");
@@ -102,12 +92,7 @@ public class MyStudyUpdateHandler implements Command {
       return;
     }
 
-    requestAgent.request("study.update", myStudy);
+    studyDao.update(myStudy);
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("스터디 수정 실패!");
-      return;
-    }
-    System.out.println(" >> 스터디가 수정되었습니다.");
   }
 }

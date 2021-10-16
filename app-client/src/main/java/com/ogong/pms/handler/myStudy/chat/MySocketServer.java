@@ -1,4 +1,4 @@
-package com.ogong.chat;
+package com.ogong.pms.handler.myStudy.chat;
 
 import java.io.BufferedReader;
 import java.io.IOException;

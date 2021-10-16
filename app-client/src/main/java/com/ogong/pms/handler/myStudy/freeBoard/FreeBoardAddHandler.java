@@ -2,23 +2,22 @@ package com.ogong.pms.handler.myStudy.freeBoard;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.FreeBoard;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthPerMemberLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class FreeBoardAddHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public FreeBoardAddHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public FreeBoardAddHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -27,19 +26,12 @@ public class FreeBoardAddHandler implements Command {
     System.out.println("▶ 게시글 작성");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(request.getAttribute("inputNo")));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    Study myStudy = requestAgent.getObject(Study.class);
+    int studyNo = (int) request.getAttribute("inputNo"); 
+    int memberNo = member.getPerNo();
+
+    Study myStudy = studyDao.findByMyStudy(memberNo, studyNo);
 
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
 
@@ -70,12 +62,7 @@ public class FreeBoardAddHandler implements Command {
     freeBoardList.add(freeBoard);
     myStudy.setMyStudyFreeBoard(freeBoardList);
 
-    requestAgent.request("study.update", myStudy);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("스터디 수정 실패!");
-      return;
-    }
+    studyDao.update(myStudy);
 
     System.out.println(" >> 게시글이 등록되었습니다.");
     request.getRequestDispatcher("/myStudy/freeBoardList").forward(request);

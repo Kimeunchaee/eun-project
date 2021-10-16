@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.freeBoard;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.FreeBoard;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class FreeBoardListHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public FreeBoardListHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public FreeBoardListHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -23,18 +22,9 @@ public class FreeBoardListHandler implements Command {
     System.out.println("▶ 게시글 목록");
     System.out.println();
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo",String.valueOf(request.getAttribute("inputNo")));
+    int no = (int) request.getAttribute("inputNo"); 
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
-
+    Study myStudy = studyDao.findByNo(no);
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
 
     for (FreeBoard freeBoard : freeBoardList) {
@@ -62,7 +52,7 @@ public class FreeBoardListHandler implements Command {
         case 1 :request.getRequestDispatcher("/myStudy/freeBoardDetail").forward(request); return;
         case 2 : request.getRequestDispatcher("/myStudy/freeBoardAdd").forward(request); return;
         default : return;
-        //        default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
+        // default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
       }
     }
 
@@ -75,7 +65,7 @@ public class FreeBoardListHandler implements Command {
       switch (selete) {
         case 1 : request.getRequestDispatcher("/myStudy/freeBoardAdd").forward(request); return;
         default : return;
-        //default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
+        // default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
       }
     }
   }
