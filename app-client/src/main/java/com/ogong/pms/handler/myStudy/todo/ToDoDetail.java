@@ -23,9 +23,9 @@ public class ToDoDetail implements Command {
     System.out.println("▶ To-Do List 상세보기");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
     List <ToDo> todoList = myStudy.getMyStudyToDo();
 
     while (true) {
@@ -34,6 +34,7 @@ public class ToDoDetail implements Command {
 
       int[] arry = new int[2]; // studyNo와 해당 todo 번호 둘 다 넘기려고 배열로 받음
       arry[0] = (int) request.getAttribute("inputNo"); // study 번호를 넘겨 줌
+
 
       for (int i = 0; i < todoList.size(); i++) {
         if (todoList.get(i).getTodoNo() == inputTodoNo) {

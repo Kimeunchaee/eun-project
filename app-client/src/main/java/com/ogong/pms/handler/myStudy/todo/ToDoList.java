@@ -23,9 +23,9 @@ public class ToDoList implements Command {
     System.out.println("▶ To-Do List 목록");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
     List <ToDo> todoList = myStudy.getMyStudyToDo();
 
     if (todoList.isEmpty()) {

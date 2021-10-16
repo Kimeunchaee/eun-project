@@ -24,9 +24,7 @@ public class FreeBoardDeleteHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNoFreeNo");
 
-    int no = arry[0];
-
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(arry[0]);
 
     FreeBoard freeBoard = myStudy.getMyStudyFreeBoard().get(arry[1]);
 
@@ -46,8 +44,8 @@ public class FreeBoardDeleteHandler implements Command {
     myStudy.getMyStudyFreeBoard().remove(freeBoard);
 
     studyDao.update(myStudy);
-    System.out.println(" >> 게시글이 삭제되었습니다.");
 
+    System.out.println(" >> 게시글이 삭제되었습니다.");
     request.getRequestDispatcher("/myStudy/freeBoardList").forward(request);
     return;
   }

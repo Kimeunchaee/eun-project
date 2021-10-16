@@ -22,9 +22,10 @@ public class GuilderDeleteHandler implements Command {
     System.out.println("▶ 구성원 탈퇴시키기");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
+
     List<Member> guilderList = myStudy.getMembers();
 
     if (myStudy.getMembers().isEmpty()) {
@@ -48,7 +49,6 @@ public class GuilderDeleteHandler implements Command {
             return;
           }
 
-          // myStudy.getMembers().remove(guilder);
           System.out.println();
           System.out.println(" >> 구성원이 탈퇴되었습니다.");
           guilder = guilderMember;

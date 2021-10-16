@@ -1,4 +1,4 @@
-package com.ogong.pms.handler.myStudy.chat;
+package com.ogong.chat;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

@@ -1,6 +1,6 @@
 package com.ogong.pms.handler.study;
 
-import java.util.List;
+import java.util.Collection;
 import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
@@ -9,7 +9,7 @@ import com.ogong.util.Prompt;
 
 public class StudySearchHandler implements Command {
 
-  StudyDao studyDao; 
+  StudyDao studyDao;
 
   public StudySearchHandler(StudyDao studyDao) {
     this.studyDao = studyDao;
@@ -25,32 +25,24 @@ public class StudySearchHandler implements Command {
     String input = Prompt.inputString(" 검색어 : ");
     System.out.println();
 
-    List<Study> studyList = studyDao.findByKeyword(input);
-
     int count = 0;
+
+    Collection<Study> studyList = studyDao.findByKeyword(input);
+
     for (Study searchStudy : studyList) {
 
       if (searchStudy.getStudyTitle().contains(input) ||
           searchStudy.getSubject().contains(input) ||
           searchStudy.getArea().contains(input)) {
-
-        if (searchStudy.getStudyTitle().contains("탈퇴")) {
-          System.out.printf(" \n (%s)\n", searchStudy.getStudyNo());
-          System.out.printf(" [%s]\n", searchStudy.getStudyTitle());
-          System.out.println();
-
-        } else {
-          System.out.printf(" \n (%s)\n", searchStudy.getStudyNo());
-          System.out.printf(" [%s]\n", searchStudy.getStudyTitle());
-          System.out.printf(" >> 조장 : %s\n", searchStudy.getOwner().getPerNickname());
-          System.out.printf(" >> 분야 : %s\n", searchStudy.getSubject());
-          System.out.printf(" >> 지역 : %s\n", searchStudy.getArea());
-          System.out.printf(" >> 인원수 : %s/%s명\n",
-              searchStudy.getMembers().size() + 1, searchStudy.getNumberOfPeple());
-          System.out.printf(" >> 대면 : %s\n", searchStudy.getFace());
-          System.out.printf(" >> 소개글 : %s\n", searchStudy.getIntroduction());
-          count++;
-        }
+        System.out.printf(" \n (%s)\n", searchStudy.getStudyNo());
+        System.out.printf(" [%s]\n", searchStudy.getStudyTitle());
+        System.out.printf(" >> 조장 : %s\n", searchStudy.getOwner().getPerNickname());
+        System.out.printf(" >> 분야 : %s\n", searchStudy.getSubject());
+        System.out.printf(" >> 지역 : %s\n", searchStudy.getArea());
+        System.out.printf(" >> 인원수 : %s/%s명\n", searchStudy.getMembers().size() + 1, searchStudy.getNumberOfPeple());
+        System.out.printf(" >> 대면 : %s\n", searchStudy.getFace());
+        System.out.printf(" >> 소개글 : %s\n", searchStudy.getIntroduction());
+        count++;
       }
     }
 

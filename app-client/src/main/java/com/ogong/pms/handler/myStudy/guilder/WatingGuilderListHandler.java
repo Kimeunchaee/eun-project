@@ -24,9 +24,9 @@ public class WatingGuilderListHandler implements Command {
     System.out.println("▶ 승인 대기 목록");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
 
     if (!myStudy.getWatingMemberNames().isEmpty()) {
 
@@ -41,8 +41,8 @@ public class WatingGuilderListHandler implements Command {
 
       int inputGuilerNo = Prompt.inputInt("선택> ");
       switch (inputGuilerNo) {
-        case 1: agreeStudyMember(myStudy, studyDao); return;
-        case 2: disagreeStudyMember(myStudy, studyDao); return;
+        case 1: agreeStudyMember(myStudy); return;
+        case 2: disagreeStudyMember(myStudy); return;
         case 0: return;
         default: return;
       }
@@ -50,7 +50,7 @@ public class WatingGuilderListHandler implements Command {
   }
 
   // 승인
-  private void agreeStudyMember(Study myStudy, StudyDao studyDao) throws Exception {
+  private void agreeStudyMember(Study myStudy) throws Exception {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
@@ -90,7 +90,7 @@ public class WatingGuilderListHandler implements Command {
   }
 
   // 거절
-  private void disagreeStudyMember(Study myStudy, StudyDao studyDao) throws Exception {
+  private void disagreeStudyMember(Study myStudy) throws Exception {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 

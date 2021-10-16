@@ -16,6 +16,7 @@ public class MyStudyDetailHandler implements Command {
     this.studyDao = studyDao;
   }
 
+
   @Override
   public void execute(CommandRequest request) throws Exception {
     System.out.println();
@@ -25,11 +26,10 @@ public class MyStudyDetailHandler implements Command {
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
     int studyNo = Prompt.inputInt(" 번호  : ");
-    int memberNo = member.getPerNo();
 
     Study s = new Study();
 
-    Study myStudy = studyDao.findByMyStudy(memberNo, studyNo);
+    Study myStudy = studyDao.findMyStudy(member.getPerNo(), studyNo);
 
     if (myStudy != null) {
       System.out.printf("\n (%s)", myStudy.getStudyNo());
@@ -65,12 +65,12 @@ public class MyStudyDetailHandler implements Command {
     System.out.println("5. 화상미팅");
     System.out.println("6. 탈퇴하기");  
 
+
     if (s.getOwner().getPerNickname().equals(
         AuthPerMemberLoginHandler.loginUser.getPerNickname())) {
       System.out.println("7. 스터디 수정");
       System.out.println("8. 스터디 삭제");
     }
-
     System.out.println("0. 뒤로 가기");
 
     request.setAttribute("inputNo", s.getStudyNo());
@@ -85,7 +85,6 @@ public class MyStudyDetailHandler implements Command {
       case 6: request.getRequestDispatcher("/myStudy/exit").forward(request); return;  
       case 7: request.getRequestDispatcher("/myStudy/update").forward(request); return;
       case 8: request.getRequestDispatcher("/myStudy/delete").forward(request); return;
-      case 0: request.getRequestDispatcher("/myStudy/list").forward(request); return;
       default : return;
     }
   }

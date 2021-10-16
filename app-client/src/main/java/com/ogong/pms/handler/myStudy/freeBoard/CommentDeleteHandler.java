@@ -31,9 +31,7 @@ public class CommentDeleteHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNoFreeNo");
 
-    int no = arry[0];
-
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(arry[0]);
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
     FreeBoard freeBoard = freeBoardList.get(arry[1]);
     List<Comment> commentList = freeBoard.getComment();
@@ -76,8 +74,8 @@ public class CommentDeleteHandler implements Command {
     myStudy.setMyStudyFreeBoard(freeBoardList);
 
     studyDao.update(myStudy);
-    System.out.println(" >> 댓글이 삭제되었습니다.");
 
+    System.out.println(" >> 댓글이 삭제되었습니다.");
     request.getRequestDispatcher("/myStudy/freeBoardDetail").forward(request);
     return;
   }

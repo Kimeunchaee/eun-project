@@ -1,19 +1,18 @@
 package com.ogong.pms.handler.admin;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.AuthAdminLoginHandler;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class AdminStudyDeleteHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public AdminStudyDeleteHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public AdminStudyDeleteHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -23,17 +22,7 @@ public class AdminStudyDeleteHandler implements Command {
 
     int inputNo = Prompt.inputInt(" 번호 : ");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(inputNo));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 해당 스터디가 없습니다.");
-      return;
-    }
-
-    Study study = requestAgent.getObject(Study.class);
+    Study study = studyDao.findByNo(inputNo);
 
     if (study.getOwner().getPerNickname() 
         != AuthAdminLoginHandler.getLoginAdmin().getMasterNickname()) {
@@ -47,12 +36,7 @@ public class AdminStudyDeleteHandler implements Command {
       }
     }
 
-    requestAgent.request("study.delete", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 삭제가 실패되었습니다.");
-      return;
-    }
+    studyDao.delete(inputNo);
 
     System.out.println(" >> 스터디를 삭제하였습니다.");
     request.getRequestDispatcher("/study/list").forward(request);

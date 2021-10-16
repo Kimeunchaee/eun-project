@@ -24,10 +24,7 @@ public class FreeBoardUpdateHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNoFreeNo");
 
-    int no = arry[0];
-
-    Study myStudy = studyDao.findByNo(no);
-
+    Study myStudy = studyDao.findByNo(arry[0]);
     FreeBoard freeBoard = myStudy.getMyStudyFreeBoard().get(arry[1]);
 
     if (freeBoard.getFreeBoardWriter().getPerNo() != AuthPerMemberLoginHandler.getLoginUser().getPerNo()) {
@@ -52,8 +49,8 @@ public class FreeBoardUpdateHandler implements Command {
     freeBoard.setFreeBoardAtcFile(freeBoardAtcFile);
 
     studyDao.update(myStudy);
-    System.out.println(" >> 게시글을 수정하였습니다.");
 
+    System.out.println(" >> 게시글을 수정하였습니다.");
     request.getRequestDispatcher("/myStudy/freeBoardList").forward(request);
     return;
   }

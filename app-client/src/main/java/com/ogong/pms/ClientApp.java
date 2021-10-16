@@ -194,7 +194,7 @@ public class ClientApp {
     // 로컬
     requestAgent = new RequestAgent("127.0.0.1", 5050);
     //requestAgent = new RequestAgent("192.168.0.92", 5050);
-    //requestAgent = new RequestAgent("192.168.0.68", 5050);
+    //    requestAgent = new RequestAgent("192.168.0.68", 5050);
 
     // 데이터 관리를 담당할 DAO 객체를 준비한다.
     NetMemberDao memberDao = new NetMemberDao(requestAgent);
@@ -259,7 +259,7 @@ public class ClientApp {
     commandMap.put("/adminNotice/update", new AdminNoticeUpdateHandler(adminDao));
     commandMap.put("/adminNotice/delete", new AdminNoticeDeleteHandler(adminDao));
 
-    commandMap.put("/study/delete", new AdminStudyDeleteHandler(requestAgent));
+    commandMap.put("/study/delete", new AdminStudyDeleteHandler(studyDao));
 
     commandMap.put("/study/add", new StudyAddHandler(studyDao));
     commandMap.put("/study/list", new StudyListHandler(studyDao));
@@ -278,11 +278,11 @@ public class ClientApp {
     commandMap.put("/myStudy/entrustGuilder", new GuilderEntrustHandler(studyDao));
     commandMap.put("/myStudy/deleteGuilder", new GuilderDeleteHandler(studyDao));
 
-    commandMap.put("/myStudy/calenderAdd", new CalenderAddHandler(requestAgent));
-    commandMap.put("/myStudy/calenderList", new CalenderListHandler(requestAgent));
-    commandMap.put("/myStudy/calenderDetail", new CalenderDetailHandler(requestAgent));
-    commandMap.put("/myStudy/calenderUpdate", new CalenderUpdateHandler(requestAgent));
-    commandMap.put("/myStudy/calenderDelete", new CalenderDeleteHandler(requestAgent));
+    commandMap.put("/myStudy/calenderAdd", new CalenderAddHandler(studyDao));
+    commandMap.put("/myStudy/calenderList", new CalenderListHandler(studyDao));
+    commandMap.put("/myStudy/calenderDetail", new CalenderDetailHandler(studyDao));
+    commandMap.put("/myStudy/calenderUpdate", new CalenderUpdateHandler(studyDao));
+    commandMap.put("/myStudy/calenderDelete", new CalenderDeleteHandler(studyDao));
 
     PromptFreeBoard promptFreeBoard = new PromptFreeBoard(requestAgent);
     commandMap.put("/myStudy/freeBoardList", new FreeBoardListHandler(studyDao));
@@ -291,10 +291,10 @@ public class ClientApp {
     commandMap.put("/myStudy/freeBoardUpdate", new FreeBoardUpdateHandler(studyDao));
     commandMap.put("/myStudy/freeBoardDelete", new FreeBoardDeleteHandler(studyDao));
 
-    //    Socket chatSocket = new Socket();
+    //Socket chatSocket = new Socket(); 
     //    commandMap.put("/myStudy/chat", new MyStudyChat(requestAgent));
-    //    commandMap.put("/myStudy/chatOpen", new MySocketServer(chatSocket, requestAgent));
-    //    commandMap.put("/myStudy/chatStart", new MySocketClient(requestAgent));
+    //commandMap.put("/myStudy/chatOpen", new MySocketServer(chatSocket, requestAgent));
+    //commandMap.put("/myStudy/chatStart", new MySocketClient(requestAgent));
 
     commandMap.put("/myStudy/freeBoard/commentDelete", new CommentDeleteHandler(studyDao));
     commandMap.put("/myStudy/freeBoard/commentAdd", new CommentAddHandler(studyDao));

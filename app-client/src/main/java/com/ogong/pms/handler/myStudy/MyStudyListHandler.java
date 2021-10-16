@@ -1,6 +1,6 @@
 package com.ogong.pms.handler.myStudy;
 
-import java.util.List;
+import java.util.Collection;
 import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Member;
 import com.ogong.pms.domain.Study;
@@ -9,6 +9,8 @@ import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
 
 public class MyStudyListHandler implements Command {
+
+  private static final String Collection = null;
 
   StudyDao studyDao;
 
@@ -28,7 +30,7 @@ public class MyStudyListHandler implements Command {
       return;
     }
 
-    List<Study> studyList = studyDao.findAll();
+    Collection<Study> studyList = studyDao.findAll();
 
     // 참여중-----------------------------------------------------------------------
     // test용으로 setPerMyStudy에 new로 생성해서 값은 안 넣었지만

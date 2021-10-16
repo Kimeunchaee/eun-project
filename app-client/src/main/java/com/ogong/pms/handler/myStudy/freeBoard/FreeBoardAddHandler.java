@@ -26,12 +26,11 @@ public class FreeBoardAddHandler implements Command {
     System.out.println("▶ 게시글 작성");
     System.out.println();
 
+    int inputNo = (int) request.getAttribute("inputNo");
+
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    int studyNo = (int) request.getAttribute("inputNo"); 
-    int memberNo = member.getPerNo();
-
-    Study myStudy = studyDao.findByMyStudy(memberNo, studyNo);
+    Study myStudy = studyDao.findByNo(inputNo);
 
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
 

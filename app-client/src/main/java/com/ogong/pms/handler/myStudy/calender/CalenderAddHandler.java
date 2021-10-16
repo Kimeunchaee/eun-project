@@ -1,22 +1,21 @@
 package com.ogong.pms.handler.myStudy.calender;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Calender;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class CalenderAddHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
   int calenderNo;
 
-  public CalenderAddHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public CalenderAddHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -25,17 +24,8 @@ public class CalenderAddHandler implements Command {
     System.out.println("▶ 일정 등록");
 
     int[] arr = (int[]) request.getAttribute("inputNo");
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arr[0]));
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println("스터디 조회 실패");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(arr[0]);
 
     List<Calender> calenderList = myStudy.getMyStudyCalender();
     Calender calender = new Calender();
@@ -127,12 +117,8 @@ public class CalenderAddHandler implements Command {
     calenderList.add(calender);
     myStudy.setMyStudyCalender(calenderList);
 
-    requestAgent.request("study.update", myStudy);
+    studyDao.update(myStudy);
 
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 캘린더 저장 실패");
-      return;
-    }
   }
 
   private String stateImportant() {

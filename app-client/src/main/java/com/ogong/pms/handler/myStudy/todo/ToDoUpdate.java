@@ -9,14 +9,13 @@ import com.ogong.util.Prompt;
 
 public class ToDoUpdate implements Command {
 
-  StudyDao studyDao; 
+  StudyDao studyDao;
 
   public ToDoUpdate(StudyDao studyDao) {
     this.studyDao = studyDao;
   }
 
   //삭제
-  @Override
   public void execute(CommandRequest request) throws Exception {
     System.out.println();
     System.out.println("▶ To-Do List 변경");
@@ -24,9 +23,7 @@ public class ToDoUpdate implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyTodoNo");
 
-    int no = arry[0];
-
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(arry[0]);
     ToDo todo = myStudy.getMyStudyToDo().get(arry[1]);
 
     String todoContent = Prompt.inputString(String.format(" 내용(%s) : ", todo.getTodoContent()));

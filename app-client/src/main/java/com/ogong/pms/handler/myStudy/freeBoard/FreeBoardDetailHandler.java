@@ -1,5 +1,6 @@
 package com.ogong.pms.handler.myStudy.freeBoard;
 
+import java.util.HashMap;
 import java.util.List;
 import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.FreeBoard;
@@ -10,8 +11,8 @@ import com.ogong.util.Prompt;
 
 public class FreeBoardDetailHandler implements Command {
 
-  PromptFreeBoard promptFreeBoard;
   StudyDao studyDao;
+  PromptFreeBoard promptFreeBoard;
 
   public FreeBoardDetailHandler(StudyDao studyDao, PromptFreeBoard promptFreeBoard) {
     this.studyDao = studyDao;
@@ -24,9 +25,10 @@ public class FreeBoardDetailHandler implements Command {
     System.out.println("▶ 게시글 상세보기");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int freeBoadNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(freeBoadNo);
+
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
 
     if (freeBoardList.isEmpty()) {
@@ -35,6 +37,10 @@ public class FreeBoardDetailHandler implements Command {
     }
 
     int inputNo = Prompt.inputInt(" 번호 : ");
+
+    HashMap<String,String> paramsComment = new HashMap<>();
+    paramsComment.put("freeinputNo", String.valueOf(inputNo));
+
     System.out.println();
 
     int[] arry = new int[2];

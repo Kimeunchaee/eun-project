@@ -22,9 +22,9 @@ public class GuilderListHandler implements Command {
     System.out.println("▶ 구성원");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
 
     System.out.printf(" >> 스터디 구성원 (%s/%s명)\n" , myStudy.getMembers().size() + 1,
         myStudy.getNumberOfPeple());
@@ -46,6 +46,8 @@ public class GuilderListHandler implements Command {
         myStudy.getOwner().getPerNickname()) && myStudy.getWatingMemberNames().isEmpty()) {
       System.out.println("\n ☆ > 승인 대기 중인 회원이 없습니다.");
     }
+
+    request.setAttribute("inputNo", myStudy.getStudyNo());
 
     System.out.println("\n----------------------");
     System.out.println();

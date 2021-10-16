@@ -16,7 +16,6 @@ public class StudyJoinHandler implements Command {
     this.studyDao = studyDao;
   }
 
-  @Override
   public void execute(CommandRequest request) throws Exception {
     System.out.println();
     System.out.println("▶ 스터디 신청");
@@ -24,9 +23,9 @@ public class StudyJoinHandler implements Command {
 
     Member member = AuthPerMemberLoginHandler.getLoginUser();
 
-    int no = (int) request.getAttribute("inputNo");
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study study = studyDao.findByNo(no);
+    Study study = studyDao.findByNo(inputNo);
 
     for (Member pM : study.getMembers()) {
       if (pM.getPerNickname().equals(member.getPerNickname())) {

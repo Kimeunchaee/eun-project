@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.calender;
 
 import java.sql.Date;
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Calender;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class CalenderUpdateHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public CalenderUpdateHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public CalenderUpdateHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -24,17 +23,7 @@ public class CalenderUpdateHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNocalNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arry[0]));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(arry[0]);
     Calender calender = myStudy.getMyStudyCalender().get(arry[1]);
 
     int updateMonth;
@@ -113,12 +102,7 @@ public class CalenderUpdateHandler implements Command {
     //calender.setImportanceCalender(updateImportant);
     calender.setEndDay(updateEndDay);
 
-    requestAgent.request("study.update", myStudy);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" 일정 수정 오류");
-      return;
-    }
+    studyDao.update(myStudy);
 
     System.out.println(" >> 일정을 수정하였습니다.\n");
   }

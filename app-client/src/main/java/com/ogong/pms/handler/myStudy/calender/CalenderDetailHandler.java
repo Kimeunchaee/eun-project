@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.calender;
 
-import java.util.HashMap;
 import java.util.List;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Calender;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class CalenderDetailHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public CalenderDetailHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public CalenderDetailHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -23,20 +22,9 @@ public class CalenderDetailHandler implements Command {
     System.out.println("▶ 일정 상세");
     System.out.println();
 
-
     int[] arry = (int[]) request.getAttribute("inputNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arry[0]));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(arry[0]);
 
     List<Calender> calenderList = myStudy.getMyStudyCalender();
 

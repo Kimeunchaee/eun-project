@@ -20,22 +20,20 @@ public class ToDoAdd implements Command {
   }
 
   //등록
-  @Override
   public void execute(CommandRequest request) throws Exception {
     System.out.println();
     System.out.println("▶ To-Do List 등록");
     System.out.println();
 
+    int inputNo = (int) request.getAttribute("inputNo");
+
     Member member = AuthPerMemberLoginHandler.getLoginUser();
+    Study myStudy = studyDao.findByNo(inputNo);
 
     if (member == null) {
       System.out.println(" >> 로그인 한 회원만 조회 가능합니다.");
       return;
     }
-
-    int no = (int) request.getAttribute("inputNo"); 
-
-    Study myStudy = studyDao.findByNo(no);
 
     if (myStudy.getStudyTitle() == null) {
       System.out.println(" >> 가입된 스터디가 없습니다.");

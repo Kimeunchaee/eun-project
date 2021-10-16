@@ -23,11 +23,9 @@ public class StudyAddHandler implements Command {
     System.out.println("▶ 스터디 등록");
     System.out.println();
 
-    List<Study> studyList = studyDao.findAll();
-
-    //List<Study> arrayStudy = new ArrayList<>(studyList);
-
     Study study = new Study();
+
+    List<Study> arrayStudy = studyDao.findAll();
 
     // 스터디명
     String studyTitle;
@@ -155,6 +153,15 @@ public class StudyAddHandler implements Command {
     }
     study.setIntroduction(introduction);
 
+    // 마지막 스터디 번호 찾아서 새 스터디 등록시 +1 되도록 기능 구현
+    Study lastStudy = null;
+    if (!arrayStudy.isEmpty()) {
+      lastStudy = arrayStudy.get(arrayStudy.size() - 1);
+      study.setStudyNo(lastStudy.getStudyNo() + 1);
+    } else {
+      study.setStudyNo(1);
+    }
+
     // 작성자,구성원,캘린더,자유게시판
     study.setOwner(AuthPerMemberLoginHandler.getLoginUser());
     study.setMembers(new ArrayList<>());
@@ -169,24 +176,8 @@ public class StudyAddHandler implements Command {
       System.out.println(" >> 등록이 취소되었습니다.");
       return;
     }
-
-    // 마지막 스터디 번호 찾아서 새 스터디 등록시 +1 되도록 기능 구현
-    //    Study lastStudy = null;
-    //    if (!arrayStudy.isEmpty()) {
-    //      lastStudy = arrayStudy.get(arrayStudy.size() - 1);
-    //      study.setStudyNo(lastStudy.getStudyNo() + 1);
-    //    } else {
-    //      study.setStudyNo(1);
-    //    }
-
-    Study lastStudy = null;
-    if (!studyList.isEmpty()) {
-      lastStudy = studyList.get(studyList.size() - 1);
-      study.setStudyNo(lastStudy.getStudyNo() + 1);
-    } else {
-      study.setStudyNo(1);
-    }
-
+    // 고유번호
     studyDao.insert(study);
+    System.out.println(" >> 스터디가 등록되었습니다.");
   }
 }

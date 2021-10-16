@@ -9,7 +9,7 @@ import com.ogong.util.Prompt;
 
 public class ToDoDelete implements Command {
 
-  StudyDao studyDao; 
+  StudyDao studyDao;
 
   public ToDoDelete(StudyDao studyDao) {
     this.studyDao = studyDao;
@@ -24,9 +24,7 @@ public class ToDoDelete implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyTodoNo");
 
-    int no = arry[0];
-
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(arry[0]);
     ToDo todo = myStudy.getMyStudyToDo().get(arry[1]);
 
     String input = Prompt.inputString(" 정말 삭제하시겠습니까? (네 / 아니오)");

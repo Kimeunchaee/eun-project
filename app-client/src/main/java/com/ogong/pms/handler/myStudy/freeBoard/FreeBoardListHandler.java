@@ -22,9 +22,10 @@ public class FreeBoardListHandler implements Command {
     System.out.println("▶ 게시글 목록");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo"); 
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
+
     List<FreeBoard> freeBoardList = myStudy.getMyStudyFreeBoard();
 
     for (FreeBoard freeBoard : freeBoardList) {
@@ -52,7 +53,7 @@ public class FreeBoardListHandler implements Command {
         case 1 :request.getRequestDispatcher("/myStudy/freeBoardDetail").forward(request); return;
         case 2 : request.getRequestDispatcher("/myStudy/freeBoardAdd").forward(request); return;
         default : return;
-        // default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
+        //        default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
       }
     }
 
@@ -65,7 +66,7 @@ public class FreeBoardListHandler implements Command {
       switch (selete) {
         case 1 : request.getRequestDispatcher("/myStudy/freeBoardAdd").forward(request); return;
         default : return;
-        // default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
+        //default :request.getRequestDispatcher("/myStudy/detail").forward(request); return;
       }
     }
   }

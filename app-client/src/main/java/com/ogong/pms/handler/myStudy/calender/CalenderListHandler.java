@@ -1,20 +1,19 @@
 package com.ogong.pms.handler.myStudy.calender;
 
 import java.sql.Date;
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Calender;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class CalenderListHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public CalenderListHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public CalenderListHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   @Override
@@ -24,17 +23,8 @@ public class CalenderListHandler implements Command {
     System.out.println();
 
     int no = (int)request.getAttribute("inputNo");
-    HashMap<String, String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(no));
 
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류");
-      return;
-    }
-
-    Study study = requestAgent.getObject(Study.class);
+    Study study = studyDao.findByNo(no);
 
     Date now = new Date(System.currentTimeMillis());
     System.out.printf("      << %d월 >>\n", now.getMonth() + 1 );
@@ -64,14 +54,7 @@ public class CalenderListHandler implements Command {
     int count = 0; 
     while (true) {
 
-      requestAgent.request("study.selectOne", params);
-
-      if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-        System.out.println(" >> 스터디 상세 오류");
-        return;
-      }
-
-      study = requestAgent.getObject(Study.class);
+      study = studyDao.findByNo(no);
 
       int selectMonth = Prompt.inputInt(" >> 다른 '월' 일정 보기 : ");
       System.out.println();

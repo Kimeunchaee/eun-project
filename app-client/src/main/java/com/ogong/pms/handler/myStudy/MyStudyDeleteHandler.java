@@ -36,5 +36,6 @@ public class MyStudyDeleteHandler implements Command {
     }
 
     studyDao.delete(no);
+    System.out.println(" >> 스터디가 삭제 되었습니다.");
   }
 }

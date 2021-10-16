@@ -21,9 +21,9 @@ public class MyStudyUpdateHandler implements Command {
     System.out.println("▶ 스터디 수정");
     System.out.println();
 
-    int no = (int) request.getAttribute("inputNo");
+    int inputNo = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(no);
+    Study myStudy = studyDao.findByNo(inputNo);
 
     if (myStudy.getOwner().getPerNo() != AuthPerMemberLoginHandler.getLoginUser().getPerNo()) {
       System.out.println(" >> 수정 권한이 없습니다.");
@@ -94,5 +94,6 @@ public class MyStudyUpdateHandler implements Command {
 
     studyDao.update(myStudy);
 
+    System.out.println(" >> 스터디가 수정되었습니다.");
   }
 }

@@ -1,19 +1,18 @@
 package com.ogong.pms.handler.myStudy.calender;
 
-import java.util.HashMap;
+import com.ogong.pms.dao.StudyDao;
 import com.ogong.pms.domain.Calender;
 import com.ogong.pms.domain.Study;
 import com.ogong.pms.handler.Command;
 import com.ogong.pms.handler.CommandRequest;
-import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
 
 public class CalenderDeleteHandler implements Command {
 
-  RequestAgent requestAgent;
+  StudyDao studyDao;
 
-  public CalenderDeleteHandler(RequestAgent requestAgent) {
-    this.requestAgent = requestAgent;
+  public CalenderDeleteHandler(StudyDao studyDao) {
+    this.studyDao = studyDao;
   }
 
   public void execute(CommandRequest request) throws Exception {
@@ -22,17 +21,7 @@ public class CalenderDeleteHandler implements Command {
 
     int[] arry = (int[]) request.getAttribute("studyNocalNo");
 
-    HashMap<String,String> params = new HashMap<>();
-    params.put("studyNo", String.valueOf(arry[0]));
-
-    requestAgent.request("study.selectOne", params);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" >> 스터디 상세 오류.");
-      return;
-    }
-
-    Study myStudy = requestAgent.getObject(Study.class);
+    Study myStudy = studyDao.findByNo(arry[0]);
 
     Calender calender = myStudy.getMyStudyCalender().get(arry[1]);
 
@@ -43,12 +32,7 @@ public class CalenderDeleteHandler implements Command {
     }
     myStudy.getMyStudyCalender().remove(calender);
 
-    requestAgent.request("study.update", myStudy);
-
-    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
-      System.out.println(" 일정 삭제 오류");
-      return;
-    }
+    studyDao.update(myStudy);
 
     System.out.println(" >> 일정이 삭제되었습니다.");
   }

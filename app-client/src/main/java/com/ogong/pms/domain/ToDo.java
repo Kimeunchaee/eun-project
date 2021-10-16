@@ -14,22 +14,24 @@ public class ToDo {
   private String todoRemark;    // 투두리스트 비고
   private Date todoDate; // 투두리스트 등록일
   private int todoStatus;   // 투두리스트 상태
-  private String todocomplete;  // 완료된 투두리스트
-
+  // private String todocomplete;  // 완료된 투두리스트
+  // 필요없음
 
 
   @Override
   public String toString() {
     return "ToDo [todoNo=" + todoNo + ", todoTitle=" + todoTitle + ", todoContent=" + todoContent
         + ", todoRemark=" + todoRemark + ", todoDate=" + todoDate + ", todoStatus=" + todoStatus
-        + ", todocomplete=" + todocomplete + "]";
+        + "]";
   }
-  public String getTodocomplete() {
-    return todocomplete;
-  }
-  public void setTodocomplete(String todocomplete) {
-    this.todocomplete = todocomplete;
-  }
+
+
+  //  public String getTodocomplete() {
+  //    return todocomplete;
+  //  }
+  //  public void setTodocomplete(String todocomplete) {
+  //    this.todocomplete = todocomplete;
+  //  }
   public int getTodoNo() {
     return todoNo;
   }
