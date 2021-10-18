@@ -17,12 +17,8 @@ public interface AdminDao {
   void update(AdminNotice notice) throws Exception;
   void delete(int noticeNo) throws Exception;
   List<AdminNotice> findAll() throws Exception;
+  Admin findByEmailAndPassword(String email, String password) throws Exception;
   AdminNotice findByNoticeNo(int noticeNo) throws Exception;
 
 }
 
-//case "notice.insert" : insert(request, response); break;
-//case "notice.selectOne" : selectOne(request, response); break;
-//case "notice.selectList" : selectList(request, response); break;
-//case "notice.update" : update(request, response); break;
-//case "notice.delete" : delete(request, response); break;

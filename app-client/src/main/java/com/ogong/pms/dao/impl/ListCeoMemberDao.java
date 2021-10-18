@@ -45,6 +45,13 @@ public class ListCeoMemberDao implements CeoMemberDao {
   }
 
   @Override
+  public CeoMember findByEmailAndPassword(String inputEmail, String inputPassword)
+      throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
   public void insert(CeoMember ceoMember) throws Exception {
     list.add(ceoMember);
   }

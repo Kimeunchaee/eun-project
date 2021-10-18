@@ -49,6 +49,12 @@ public class ListMemberDao implements MemberDao {
   }
 
   @Override
+  public Member findByEmailAndPassword(String email, String password) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
   public void update(Member member) throws Exception {
     for (int i = 0; i < list.size(); i++) {
       if (list.get(i).getPerNo() == member.getPerNo()) {

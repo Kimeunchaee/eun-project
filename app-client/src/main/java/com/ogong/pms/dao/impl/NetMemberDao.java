@@ -78,6 +78,22 @@ public class NetMemberDao implements MemberDao {
   }
 
   @Override
+  public Member findByEmailAndPassword(String inputEmail, String inputPassword) throws Exception {
+    HashMap<String,String> params = new HashMap<>();
+    params.put("email", inputEmail);
+    params.put("password", inputPassword);
+
+    requestAgent.request("member.selectOneByEmailPassword",params);
+
+    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
+      System.out.println("로그인 실패");
+      return null;
+    }
+
+    return requestAgent.getObject(Member.class);
+  }
+
+  @Override
   public void update(Member member) throws Exception {
     requestAgent.request("member.update", member);
 

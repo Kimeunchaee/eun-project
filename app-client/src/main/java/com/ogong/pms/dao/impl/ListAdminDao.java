@@ -32,6 +32,12 @@ public class ListAdminDao implements AdminDao {
     return null;
   }
 
+  @Override
+  public Admin findByEmailAndPassword(String email, String password) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
   // ---------- [ 공지사항 ] -----------------------------------------------------
 
   @Override

@@ -42,6 +42,22 @@ public class NetAdminDao implements AdminDao {
     return requestAgent.getObject(Admin.class);
   }
 
+  @Override
+  public Admin findByEmailAndPassword(String email, String password) throws Exception {
+    HashMap<String,String> params = new HashMap<>();
+    params.put("adminEmail", email);
+    params.put("adminPassword", password);
+
+    requestAgent.request("admin.selectOneByEmailPassword",params);
+
+    if (requestAgent.getStatus().equals(RequestAgent.FAIL)) {
+      System.out.println("로그인 실패");
+      return null;
+    }
+
+    return requestAgent.getObject(Admin.class);
+  }
+
   // ---------- [ 공지사항 ] -----------------------------------------------------
 
   @Override
