@@ -71,13 +71,6 @@ public class CalenderUpdateHandler implements Command {
 
     String updateContent = Prompt.inputString(" 내용(" + calender.getCalenderContent() + ") : ");
 
-    //    String updateImportant = stateImportant();
-    //
-    //    if (updateImportant == null) {
-    //      System.out.println(" 입력 오류입니다.");
-    //      return;
-    //    }
-
     Date updateEndDay; 
     while (true) {
       updateEndDay =  Prompt.inputDate(" 종료일(" + calender.getEndDay() + ") : ");
@@ -105,6 +98,8 @@ public class CalenderUpdateHandler implements Command {
     studyDao.update(myStudy);
 
     System.out.println(" >> 일정을 수정하였습니다.\n");
+    request.getRequestDispatcher("/myStudy/calenderList").forward(request); 
+    return;
   }
 
 }

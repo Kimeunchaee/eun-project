@@ -35,6 +35,8 @@ public class CalenderDeleteHandler implements Command {
     studyDao.update(myStudy);
 
     System.out.println(" >> 일정이 삭제되었습니다.");
+    request.getRequestDispatcher("/myStudy/calenderList").forward(request); 
+    return;
   }
 
 }

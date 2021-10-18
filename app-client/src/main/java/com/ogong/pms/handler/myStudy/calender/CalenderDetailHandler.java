@@ -22,51 +22,57 @@ public class CalenderDetailHandler implements Command {
     System.out.println("▶ 일정 상세");
     System.out.println();
 
-    int[] arry = (int[]) request.getAttribute("inputNo");
+    int[] arr = (int[]) request.getAttribute("arryNo");
 
-    Study myStudy = studyDao.findByNo(arry[0]);
+    Study myStudy = studyDao.findByNo(arr[0]);
 
     List<Calender> calenderList = myStudy.getMyStudyCalender();
 
-    int inputNo = Prompt.inputInt(" 번호 > ");
-
-    for (int i = 0; i < calenderList.size(); i++) {
-      if (calenderList.get(i).getCalenderNo() == inputNo && 
-          calenderList.get(i).getMonth() == arry[1]) {
-        System.out.println();
-        System.out.println("["+calenderList.get(i).getCalenderNo()+"]");
-        System.out.printf(" >> 등록일 : %d월 %d일 %s요일\n",
-            calenderList.get(i).getMonth(),
-            calenderList.get(i).getDay(),
-            calenderList.get(i).getDayOftheWeek());
-        System.out.printf(" >> 종료일 : %s\n", calenderList.get(i).getEndDay());
-        System.out.printf(" >> 내  용 : %s\n", calenderList.get(i).getCalenderContent());
-        System.out.printf(" >> 중요도 : %s\n", 
-            calenderList.get(i).getImportanceCalender());
-        arry[1] = i;
-        inputNo = 0;
-        System.out.println();
+    while (true) {
+      int inputNo  = Prompt.inputInt(" 번호 > ");
+      if (inputNo == 0) {
+        request.getRequestDispatcher("/myStudy/calenderList").forward(request); return;
       }
-    }
-    if (inputNo != 0) {
-      System.out.println(" >> 해당 월에 정확한 번호를 입력해주세요");
-      return;
+      for (int i = 0; i < calenderList.size(); i++) {
+        if (calenderList.get(i).getCalenderNo() == inputNo && 
+            calenderList.get(i).getMonth() == arr[1]) {
+          System.out.println();
+          System.out.println("["+calenderList.get(i).getCalenderNo()+"]");
+          System.out.printf(" >> 등록일 : %d월 %d일 %s요일\n",
+              calenderList.get(i).getMonth(),
+              calenderList.get(i).getDay(),
+              calenderList.get(i).getDayOftheWeek());
+          System.out.printf(" >> 종료일 : %s\n", calenderList.get(i).getEndDay());
+          System.out.printf(" >> 내  용 : %s\n", calenderList.get(i).getCalenderContent());
+          System.out.printf(" >> 중요도 : %s\n", 
+              calenderList.get(i).getImportanceCalender());
+          arr[1] = i;
+          inputNo = 0;
+          System.out.println();
+        }
+      }
+      if (inputNo != 0) {
+        System.out.println(" >> 해당 월에 정확한 번호를 입력해주세요");
+        System.out.println(" 이전 > 0");
+        continue;
+      }
+      break;
     }
 
     System.out.println("---------------------");
     System.out.println("1. 수정");
     System.out.println("2. 삭제");
-    System.out.println("3. 취소");
+    System.out.println("0. 이전");
 
-    request.setAttribute("studyNocalNo", arry);
+    request.setAttribute("studyNocalNo", arr);
 
     int selectNo = Prompt.inputInt("선택> ");
     System.out.println();
     switch (selectNo) {
       case 1: request.getRequestDispatcher("/myStudy/calenderUpdate").forward(request); return;
       case 2: request.getRequestDispatcher("/myStudy/calenderDelete").forward(request); return;
-      case 3: return;
-      default : return;
+      case 0: request.getRequestDispatcher("/myStudy/calenderList").forward(request); return;
+      default : System.out.println(" >> 무효한 번호입니다."); return;
     }
   }
 

@@ -23,9 +23,9 @@ public class CalenderAddHandler implements Command {
     System.out.println();
     System.out.println("▶ 일정 등록");
 
-    int[] arr = (int[]) request.getAttribute("inputNo");
+    int no = (int) request.getAttribute("inputNo");
 
-    Study myStudy = studyDao.findByNo(arr[0]);
+    Study myStudy = studyDao.findByNo(no);
 
     List<Calender> calenderList = myStudy.getMyStudyCalender();
     Calender calender = new Calender();
@@ -118,6 +118,8 @@ public class CalenderAddHandler implements Command {
     myStudy.setMyStudyCalender(calenderList);
 
     studyDao.update(myStudy);
+    request.getRequestDispatcher("/myStudy/calenderList").forward(request); 
+    return;
 
   }
 

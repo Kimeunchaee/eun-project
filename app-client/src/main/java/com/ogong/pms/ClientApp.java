@@ -101,6 +101,7 @@ import com.ogong.pms.handler.myStudy.calender.CalenderAddHandler;
 import com.ogong.pms.handler.myStudy.calender.CalenderDeleteHandler;
 import com.ogong.pms.handler.myStudy.calender.CalenderDetailHandler;
 import com.ogong.pms.handler.myStudy.calender.CalenderListHandler;
+import com.ogong.pms.handler.myStudy.calender.CalenderMonthListHandler;
 import com.ogong.pms.handler.myStudy.calender.CalenderUpdateHandler;
 import com.ogong.pms.handler.myStudy.freeBoard.CommentAddHandler;
 import com.ogong.pms.handler.myStudy.freeBoard.CommentDeleteHandler;
@@ -125,6 +126,10 @@ import com.ogong.pms.handler.study.StudyDetailHandler;
 import com.ogong.pms.handler.study.StudyJoinHandler;
 import com.ogong.pms.handler.study.StudyListHandler;
 import com.ogong.pms.handler.study.StudySearchHandler;
+import com.ogong.pms.handler.study.bookMark.StudyBookMarkAddHandler;
+import com.ogong.pms.handler.study.bookMark.StudyBookMarkDeleteHandler;
+import com.ogong.pms.handler.study.bookMark.StudyBookMarkDetailHandler;
+import com.ogong.pms.handler.study.bookMark.StudyBookMarkListHandler;
 import com.ogong.pms.listener.AppInitListener;
 import com.ogong.request.RequestAgent;
 import com.ogong.util.Prompt;
@@ -266,6 +271,10 @@ public class ClientApp {
     commandMap.put("/study/detail", new StudyDetailHandler(studyDao));
     commandMap.put("/study/search", new StudySearchHandler(studyDao));
     commandMap.put("/study/join", new StudyJoinHandler(studyDao));
+    commandMap.put("/study/bookMarkAdd", new StudyBookMarkAddHandler(studyDao));
+    commandMap.put("/study/bookMarkList", new StudyBookMarkListHandler(studyDao));
+    commandMap.put("/study/bookMarkDetail", new StudyBookMarkDetailHandler(studyDao));
+    commandMap.put("/study/bookMarkDelete", new StudyBookMarkDeleteHandler(studyDao));
 
     commandMap.put("/myStudy/list", new MyStudyListHandler(studyDao));
     commandMap.put("/myStudy/detail", new MyStudyDetailHandler(studyDao));
@@ -280,6 +289,7 @@ public class ClientApp {
 
     commandMap.put("/myStudy/calenderAdd", new CalenderAddHandler(studyDao));
     commandMap.put("/myStudy/calenderList", new CalenderListHandler(studyDao));
+    commandMap.put("/myStudy/calenderMonthList", new CalenderMonthListHandler(studyDao));
     commandMap.put("/myStudy/calenderDetail", new CalenderDetailHandler(studyDao));
     commandMap.put("/myStudy/calenderUpdate", new CalenderUpdateHandler(studyDao));
     commandMap.put("/myStudy/calenderDelete", new CalenderDeleteHandler(studyDao));
@@ -480,6 +490,7 @@ public class ClientApp {
     MenuGroup myPageMenu = new MenuGroup("🔒 마이 페이지", PER_LOGIN); 
     myPageMenu.setMenuFilter(menuFilter);
     myPageMenu.add(new MenuItem("🙂 개인정보", "/member/detail"));
+    myPageMenu.add(new MenuItem("🌟 스터디 북마크", "/study/bookMarkList"));
     myPageMenu.add(new MenuItem("💬 문의내역", "/askBoard/perMyList"));
     myPageMenu.add(new MenuItem("📞 예약내역", "/cafeReservation/list"));
     myPageMenu.add(new MenuItem("📝 후기내역", "/cafe/myReviewList"));
