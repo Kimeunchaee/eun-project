@@ -4,6 +4,8 @@ import static com.ogong.menu.Menu.ADMIN_LOGIN;
 import static com.ogong.menu.Menu.CEO_LOGIN;
 import static com.ogong.menu.Menu.LOGOUT;
 import static com.ogong.menu.Menu.PER_LOGIN;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +13,14 @@ import com.ogong.context.ApplicationContextListener;
 import com.ogong.menu.Menu;
 import com.ogong.menu.MenuFilter;
 import com.ogong.menu.MenuGroup;
-import com.ogong.pms.dao.impl.NetAdminDao;
+import com.ogong.pms.dao.AdminDao;
+import com.ogong.pms.dao.CeoMemberDao;
+import com.ogong.pms.dao.MemberDao;
+import com.ogong.pms.dao.impl.MariadbAdminDao;
+import com.ogong.pms.dao.impl.MariadbCeoMemberDao;
+import com.ogong.pms.dao.impl.MariadbMemberDao;
 import com.ogong.pms.dao.impl.NetAskBoardDao;
 import com.ogong.pms.dao.impl.NetCafeDao;
-import com.ogong.pms.dao.impl.NetCeoMemberDao;
-import com.ogong.pms.dao.impl.NetMemberDao;
 import com.ogong.pms.dao.impl.NetStudyDao;
 import com.ogong.pms.handler.AbstractLoginHandler;
 import com.ogong.pms.handler.AuthAdminLoginHandler;
@@ -137,6 +142,7 @@ import com.ogong.util.RandomPw;
 
 public class ClientApp {
 
+  Connection con;
   RequestAgent requestAgent;
 
   HashMap<String, Command> commandMap = new HashMap<>();
@@ -197,14 +203,19 @@ public class ClientApp {
 
   public ClientApp() throws Exception {
     // 로컬
+    // null로 바꿔야함!
     requestAgent = new RequestAgent("127.0.0.1", 5050);
     //requestAgent = new RequestAgent("192.168.0.92", 5050);
-    //    requestAgent = new RequestAgent("192.168.0.68", 5050);
+    //requestAgent = new RequestAgent("192.168.0.68", 5050);
+
+    // DBMS와 연결한다.
+    con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/ogongdb?user=ogong&password=1111");
 
     // 데이터 관리를 담당할 DAO 객체를 준비한다.
-    NetMemberDao memberDao = new NetMemberDao(requestAgent);
-    NetAdminDao adminDao = new NetAdminDao(requestAgent);
-    NetCeoMemberDao ceoMemberDao = new NetCeoMemberDao(requestAgent);
+    AdminDao adminDao = new MariadbAdminDao(con);
+    MemberDao memberDao = new MariadbMemberDao(con);
+    CeoMemberDao ceoMemberDao = new MariadbCeoMemberDao(con);
     NetAskBoardDao askBoardDao = new NetAskBoardDao(requestAgent);
     NetCafeDao cafeDao = new NetCafeDao(requestAgent);
     NetStudyDao studyDao = new NetStudyDao(requestAgent);
@@ -212,7 +223,7 @@ public class ClientApp {
     System.out.println("서버에 접속 성공!"); // 접속 확인용
 
     RandomPw randomPw = new RandomPw();
-    commandMap.put("/member/login", new AuthPerMemberLoginHandler(requestAgent));
+    commandMap.put("/member/login", new AuthPerMemberLoginHandler(memberDao));
     commandMap.put("/member/logout", new AuthPerMemberLogoutHandler());
 
     commandMap.put("/member/add", new MemberAddHandler(memberDao));
@@ -238,11 +249,11 @@ public class ClientApp {
     commandMap.put("/ceoMember/detail", new CeoDetailHandler(ceoMemberDao));
     commandMap.put("/ceoMember/update", new CeoUpdateHandler(ceoMemberDao));
     commandMap.put("/ceoMember/delete", new CeoDeleteHandler(ceoMemberDao));
-    commandMap.put("/ceoMember/login", new AuthCeoMemberLoginHandler(requestAgent));
+    commandMap.put("/ceoMember/login", new AuthCeoMemberLoginHandler(ceoMemberDao));
     commandMap.put("/ceoMember/logout", new AuthCeoMemberLogoutHandler());
     commandMap.put("/ceoMember/findIdPw", new CeoFindIdPwHandler(randomPw, ceoMemberDao));
 
-    commandMap.put("/admin/login", new AuthAdminLoginHandler(requestAgent));
+    commandMap.put("/admin/login", new AuthAdminLoginHandler(adminDao));
     commandMap.put("/admin/logout", new AuthAdminLogoutHandler());
 
     commandMap.put("/admin/update", new AdminUpdateHandler(adminDao));
@@ -271,10 +282,13 @@ public class ClientApp {
     commandMap.put("/study/detail", new StudyDetailHandler(studyDao));
     commandMap.put("/study/search", new StudySearchHandler(studyDao));
     commandMap.put("/study/join", new StudyJoinHandler(studyDao));
+
+    // 1018 북마크 추가(eun)
     commandMap.put("/study/bookMarkAdd", new StudyBookMarkAddHandler(studyDao));
     commandMap.put("/study/bookMarkList", new StudyBookMarkListHandler(studyDao));
     commandMap.put("/study/bookMarkDetail", new StudyBookMarkDetailHandler(studyDao));
     commandMap.put("/study/bookMarkDelete", new StudyBookMarkDeleteHandler(studyDao));
+    //
 
     commandMap.put("/myStudy/list", new MyStudyListHandler(studyDao));
     commandMap.put("/myStudy/detail", new MyStudyDetailHandler(studyDao));
@@ -490,7 +504,7 @@ public class ClientApp {
     MenuGroup myPageMenu = new MenuGroup("🔒 마이 페이지", PER_LOGIN); 
     myPageMenu.setMenuFilter(menuFilter);
     myPageMenu.add(new MenuItem("🙂 개인정보", "/member/detail"));
-    myPageMenu.add(new MenuItem("🌟 스터디 북마크", "/study/bookMarkList"));
+    myPageMenu.add(new MenuItem("🌟 내 스크랩", "/study/bookMarkList"));
     myPageMenu.add(new MenuItem("💬 문의내역", "/askBoard/perMyList"));
     myPageMenu.add(new MenuItem("📞 예약내역", "/cafeReservation/list"));
     myPageMenu.add(new MenuItem("📝 후기내역", "/cafe/myReviewList"));
@@ -646,6 +660,7 @@ public class ClientApp {
     Prompt.close();
 
     notifyOnApplicationEnded();
+    con.close();
   }
 
   public static void main(String[] args) throws Exception {

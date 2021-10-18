@@ -32,8 +32,9 @@ public class StudyListHandler implements Command {
       }
 
       else {
-        System.out.printf(" (%d)\n 스터디명 : %s\n 분류 : %s\n 인원수 : %s/%s명\n 조장 : %s\n 대면/비대면 : %s\n",
+        System.out.printf(" (%d) 🌟%d \n [%s] | 분류 : %s | 인원수 : %s/%s명 | 조장 : %s | 대면/비대면 : %s\n",
             study.getStudyNo(),
+            study.getBookMarkMember().size(),
             study.getStudyTitle(),
             study.getSubject(),
             study.getMembers().size() + 1,
