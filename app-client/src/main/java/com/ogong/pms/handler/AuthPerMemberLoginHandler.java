@@ -35,7 +35,7 @@ public class AuthPerMemberLoginHandler extends AbstractLoginHandler implements C
       }
 
       System.out.println();
-      System.out.printf(" %s님 환영합니다!\n", member.getPerNickname());
+      System.out.printf(" '%s'님 환영합니다! 🖐\n", member.getPerNickname());
       loginUser = member;
       accessLevel = Menu.PER_LOGIN;
 

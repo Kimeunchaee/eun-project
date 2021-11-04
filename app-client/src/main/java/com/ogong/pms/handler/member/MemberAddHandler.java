@@ -26,18 +26,6 @@ public class MemberAddHandler implements Command {
     List<Member> memberList = memberDao.findAll();
     Member member = new Member();
 
-    String inputNewNick;
-    inputNewNick = Prompt.inputString(" 닉네임 : ");
-    for (Member comparisonMember : memberList) {
-      if (inputNewNick.equals(comparisonMember.getPerNickname())) {
-        System.out.println(" >> 이미 사용 중인 닉네임입니다.");
-        return;
-      }
-    }
-
-    member.setPerNickname(inputNewNick);
-    member.setPerPhoto(Prompt.inputString(" 사  진 : "));
-
     String inputNewEmail;
     while (true) {
       inputNewEmail = Prompt.inputString(" 이메일 : ");
@@ -57,7 +45,7 @@ public class MemberAddHandler implements Command {
           && !inputNewPW.contains("#") && !inputNewPW.contains("$")
           && !inputNewPW.contains("^") && !inputNewPW.contains("%")
           && !inputNewPW.contains("&") && !inputNewPW.contains("*"))) {
-        System.out.println(" >> 8자 이상 특수문자를 포함시켜 주세요.");
+        System.out.println(" >> 8자 이상 특수문자를 포함시켜 주세요.\n");
         continue;
       }
       break;
@@ -75,17 +63,45 @@ public class MemberAddHandler implements Command {
       break;
     }
 
+    String inputName = Prompt.inputString(" 이름 : ");
+    member.setPerName(inputName);
+
+    String inputTel = Prompt.inputString(" 전화번호 : ");
+    for (Member telMember : memberList) {
+      if (inputTel.equals(telMember.getPerTel())) {
+        System.out.println(" >> 이미 사용 중인 번호입니다.");
+        return;
+      }
+    }
+    member.setPerTel(inputTel);
+
+    String inputNewNick = Prompt.inputString(" 닉네임 : ");
+    for (Member comparisonMember : memberList) {
+      if (inputNewNick.equals(comparisonMember.getPerNickname())) {
+        System.out.println(" >> 이미 사용 중인 닉네임입니다.");
+        return;
+      }
+    }
+    member.setPerNickname(inputNewNick);
+
+    member.setPerPhoto(Prompt.inputString(" 사  진 : "));
+
     member.setPerRegisteredDate(new Date(System.currentTimeMillis()));
 
+    member.setPerStatus(Member.PER);
+
+    // * Active 는 데이터베이스에 기본값 1로 들어가있어서 직접 set 안해줌
+
+    // * 고유번호 증가
     // 마지막 회원번호 찾아서 신규회원 등록시 +1 되도록 기능 구현
-    Member lastMember = null;
-    if (!memberList.isEmpty()) {
-      lastMember = memberList.get(memberList.size() - 1);
-      member.setPerNo(lastMember.getPerNo() +1);
-    } else {
-      member.setPerNo(1);
-    }
-    member.setPerStatus(Member.INUSER);
+    //    Member lastMember = null;
+    //    if (!memberList.isEmpty()) {
+    //      lastMember = memberList.get(memberList.size() - 1);
+    //      member.setPerNo(lastMember.getPerNo() +1);
+    //    } else {
+    //      member.setPerNo(1);
+    //    }
+    //member.setActive(Member.INUSER);
 
     memberDao.insert(member);
 
